@@ -9,8 +9,7 @@ const APP_FILES = [
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/icon.svg",
-  "./icons/apple-touch-icon.png",
-  "./icons/apple-touch-icon.png",
+  "./icons/apple-touch-icon-v2.png",
   "./icons/mark.svg",
 
   "./images/pec-fly.jpg",
