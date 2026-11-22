@@ -16,11 +16,24 @@
 <header class="topbar"><div class="brand-mark">F</div><div><strong>FitTrack</strong><small>Тренировки и прогресс</small></div><button id="installHelp" class="icon-button" aria-label="Установка">＋</button></header>
 <main>
 <section id="view-home" class="view active">
-<div class="hero"><p class="eyebrow">ТВОЙ ПЛАН</p><h1>Становись сильнее<br>шаг за шагом.</h1><p class="muted">Регулярность важнее идеального результата.</p></div>
-<div class="stats-grid"><div class="stat-card"><span>На этой неделе</span><strong id="weekCount">0</strong><small>тренировок</small></div><div class="stat-card"><span>За месяц</span><strong id="monthCount">0</strong><small>тренировок</small></div><div class="stat-card"><span>Текущий вес</span><strong id="latestBodyWeight">—</strong><small id="bodyWeightChange">добавь первое измерение</small></div></div><div class="panel home-progress"><div class="progress-copy"><span>Цель месяца · 12 тренировок</span><strong id="homeProgressText">0 завершено всего</strong></div><div class="progress-track"><div id="homeProgressBar"></div></div></div>
-<div class="section-heading"><div><p class="eyebrow">СЛЕДУЮЩАЯ</p><h2 id="nextWorkoutTitle">Тренировка A</h2><p id="nextWorkoutSubtitle" class="muted"></p></div><span id="nextDayTag" class="tag">ПОНЕДЕЛЬНИК</span></div>
-<button id="startNext" class="primary-button">Начать следующую тренировку <span>→</span></button>
-<div class="section-heading"><h2>Тренировочный план</h2></div><div id="homeWorkoutList" class="workout-list"></div>
+ <div class="hero home-hero"><p class="eyebrow">ТВОЙ ПЛАН</p><h1>Становись сильнее<br>шаг за шагом.</h1><p class="muted">Каждая тренировка приближает к цели.</p></div>
+ <div class="home-stats">
+  <div class="stat-card home-stat-weight"><span>Текущий вес</span><strong id="latestBodyWeight">—</strong><small id="bodyWeightChange">добавь первое измерение</small></div>
+  <div class="stat-card"><span>За месяц</span><strong id="monthCount">0</strong><small>тренировок</small></div>
+  <div class="stat-card"><span>На неделе</span><strong id="weekCount">0</strong><small>тренировок</small></div>
+ </div>
+ <section class="goal-card">
+  <div class="goal-card-top"><div><p class="eyebrow">ЦЕЛЬ ПО МАССЕ</p><h2 id="weightGoalTitle">Твой прогресс</h2></div><span class="goal-icon">↗</span></div>
+  <div class="goal-numbers"><div><strong id="goalCurrentWeight">—</strong><span>сейчас</span></div><div class="goal-target"><strong id="goalTargetWeight">Цель не задана</strong><span>цель</span></div></div>
+  <div class="goal-track"><div id="weightGoalBar"></div></div>
+  <div class="goal-footer"><span id="weightGoalCaption">Добавь вес и задай цель в профиле</span><button class="goal-edit" data-nav="profile">Настроить</button></div>
+ </section>
+ <div class="home-next-card">
+  <div class="next-card-top"><p class="eyebrow">СЛЕДУЮЩАЯ ТРЕНИРОВКА</p><span id="nextDayTag" class="tag">ПОНЕДЕЛЬНИК</span></div>
+  <h2 id="nextWorkoutTitle">Тренировка A</h2><p id="nextWorkoutSubtitle" class="muted"></p>
+  <button id="startNext" class="primary-button">Начать тренировку <span>→</span></button>
+ </div>
+ <div class="section-heading"><h2>Тренировочный план</h2></div><div id="homeWorkoutList" class="workout-list"></div>
 </section>
 <section id="view-workout" class="view">
 <div class="section-heading"><div><p class="eyebrow" id="activeWorkoutDay"></p><h1 id="activeWorkoutTitle">Тренировка</h1></div><button class="mini-button" data-nav="home">Назад</button></div>
@@ -39,7 +52,7 @@
 </section>
 <section id="view-profile" class="view">
 <div class="section-heading"><div><p class="eyebrow">НАСТРОЙКИ</p><h1>Профиль</h1></div></div>
-<form id="bodyWeightForm" class="panel"><h2>Добавить вес тела</h2><label for="bodyWeightInput">Вес, кг</label><div class="form-row"><input id="bodyWeightInput" type="number" min="20" max="350" step="0.1" placeholder="Например, 78.5" required><button class="primary-button" type="submit">Сохранить</button></div><p id="weightSaveStatus" class="muted small"></p></form>
+<form id="bodyWeightForm" class="panel"><h2>Добавить вес тела</h2><label for="bodyWeightInput">Вес, кг</label><div class="form-row"><input id="bodyWeightInput" type="number" min="20" max="350" step="0.1" placeholder="Например, 78.5" required><button class="primary-button" type="submit">Сохранить</button></div><p id="weightSaveStatus" class="muted small"></p></form><form id="weightGoalForm" class="panel"><h2>Цель по весу</h2><p class="muted small">Укажи желаемый вес — FitTrack покажет прогресс на главном экране.</p><label for="weightGoalInput">Целевой вес, кг</label><div class="form-row"><input id="weightGoalInput" type="number" min="20" max="350" step="0.1" placeholder="Например, 65"><button class="primary-button" type="submit">Сохранить</button></div><p id="weightGoalStatus" class="muted small"></p></form>
 <div class="panel"><h2>Данные приложения</h2><p class="muted">Создай резервную копию или перенеси данные из файла.</p><label for="backupReminderDays">Напоминать о копии каждые</label><select id="backupReminderDays"><option value="7">7 дней</option><option value="14">14 дней</option><option value="30">30 дней</option><option value="60">60 дней</option></select><p id="backupStatus" class="muted small"></p><button id="exportData" class="secondary-button">Экспортировать данные</button><label class="secondary-button file-label">Импортировать данные<input id="importData" type="file" accept="application/json"></label><button id="clearData" class="danger-button">Удалить локальные данные</button></div>
 <div class="panel"><h2>Установка на главный экран</h2><p class="muted">В Safari нажми «Поделиться» → «На экран Домой».</p><button id="showInstallGuide" class="secondary-button">Показать инструкцию</button></div>
 </section>
