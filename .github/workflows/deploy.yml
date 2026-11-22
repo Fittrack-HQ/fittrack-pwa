@@ -20,13 +20,26 @@ jobs:
       - name: Check AWS CLI
         run: aws --version
 
-      - name: Sync FitTrack to Yandex Object Storage
+      - name: Sync FitTrack to existing bucket
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.YC_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ru-central1
         run: |
           aws s3 sync . s3://fittrack-app \
+            --endpoint-url https://storage.yandexcloud.net \
+            --region ru-central1 \
+            --no-progress \
+            --exclude ".git/*" \
+            --exclude ".github/*"
+
+      - name: Sync FitTrack to custom-domain bucket
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.YC_APP_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_APP_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ru-central1
+        run: |
+          aws s3 sync . s3://app.fittrack-app.ru \
             --endpoint-url https://storage.yandexcloud.net \
             --region ru-central1 \
             --no-progress \
