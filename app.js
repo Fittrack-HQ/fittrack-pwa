@@ -1,27 +1,384 @@
 const STORAGE_KEY = "fittrack-v1";
 const workouts = [
-{id:"A",day:"ПОНЕДЕЛЬНИК",title:"Тренировка A",subtitle:"Жимовые движения",focus:"Грудь · плечи · трицепс · ноги",exercises:[
-{id:"pec-fly",name:"Сведение рук в тренажёре («бабочка»)",sets:2,reps:"10–12",rest:90,startWeight:"10–15 кг",image:"pec-fly.jpg",tech:"Настрой сиденье так, чтобы локти были примерно на уровне груди. Прижми спину к спинке, своди рукояти перед собой без рывка. Медленно вернись в исходное положение.",muscles:"Грудные мышцы"},
-{id:"leg-extension",name:"Разгибание ног в тренажёре",sets:3,reps:"10–15",rest:90,image:"leg-extension.jpg",startWeight:"10–20 кг",tech:"Совмести колени с осью вращения тренажёра. Поднимай валик разгибанием коленей без рывка. Опускай вес плавно.",muscles:"Квадрицепсы"},
-{id:"reverse-lunge",name:"Выпады назад",sets:2,reps:"8–10 на ногу",rest:90,startWeight:"сначала без веса; затем 2–4 кг на руку",image:"reverse-lunge.jpg",tech:"Начни без гантелей, держась рядом с опорой при необходимости. Сделай шаг назад и опускайся только в комфортной амплитуде. Сохраняй устойчивый корпус и колено по линии стопы.",muscles:"Квадрицепсы, ягодичные мышцы"},
-{id:"shoulder-press-machine",name:"Жим вверх в тренажёре на плечи",sets:2,reps:"10–12",rest:90,startWeight:"минимальный вес тренажёра; ориентировочно 5–10 кг",tech:"Настрой сиденье так, чтобы рукояти были примерно на уровне ушей. Прижми спину к спинке, держи запястья ровно. Выжимай рукояти вверх без резкого выпрямления локтей, затем медленно опускай. Не прогибай поясницу и прекращай движение при боли.",muscles:"Передняя и средняя дельтовидные мышцы, трицепс"},{id:"lateral-raise",name:"Махи гантелями в стороны",sets:2,reps:"12–15",rest:75,startWeight:"2–4 кг на руку",image:"lateral-raise.jpg",tech:"Возьми лёгкие гантели, слегка согни локти. Поднимай руки примерно до уровня плеч, не раскачивай корпус.",muscles:"Средняя часть дельтовидных мышц"},
-{id:"leg-curl",name:"Сгибание ног лёжа",sets:2,reps:"10–15",rest:90,startWeight:"10–15 кг",image:"leg-curl.jpg",tech:"Расположи колени у оси тренажёра и таз на скамье. Сгибай ноги плавно, не поднимай таз.",muscles:"Задняя поверхность бедра"},
-{id:"triceps-pushdown",name:"Разгибание рук на верхнем блоке",sets:2,reps:"10–15",rest:75,image:"triceps-pushdown.jpg",startWeight:"5–10 кг",tech:"Держи локти возле корпуса. Разгибай руки, двигая преимущественно предплечьями.",muscles:"Трицепс"}]},
-{id:"B",day:"СРЕДА",title:"Тренировка B",subtitle:"Тяговые движения",focus:"Спина · бицепс · задняя поверхность ног",exercises:[
-{id:"lat-pulldown",name:"Тяга верхнего блока к груди",sets:3,reps:"8–12",rest:120,image:"lat-pulldown.jpg",startWeight:"15–25 кг",tech:"Зафиксируй бёдра под валиками. Тяни рукоять к верхней части груди, направляя локти вниз. Не тяни за голову.",muscles:"Широчайшие мышцы спины, бицепс"},
-{id:"chest-row",name:"Тяга с упором грудью",sets:3,reps:"8–12",rest:120,image:"chest-row.jpg",startWeight:"10–20 кг",tech:"Упрись грудью в подушку. Тяни рукояти к нижним рёбрам, сводя лопатки.",muscles:"Средняя часть спины, широчайшие, задняя дельта"},
-{id:"leg-curl",name:"Сгибание ног лёжа",sets:2,reps:"10–15",rest:90,startWeight:"10–15 кг",image:"leg-curl.jpg",tech:"Таз остаётся на скамье. Сгибай колени плавно, возвращай валик под контролем.",muscles:"Задняя поверхность бедра"},
-{id:"biceps-curl-machine",name:"Сгибание рук на бицепс в тренажёре",sets:2,reps:"10–15",rest:75,image:"biceps-curl-machine.jpg",startWeight:"5–10 кг",tech:"Прижми плечи к опоре. Сгибай руки без движения локтей вперёд.",muscles:"Бицепс"},
-
-{{id:"biceps-curl-cable",name:"Сгибание рук на нижнем блоке",sets:2,reps:"10–15",rest:75,image:"cable-biceps-curl.jpg",startWeight:"5–10 кг на блоке (ориентировочно)",tech:"Прикрепи прямую или EZ-рукоять к нижнему блоку. Держи локти возле корпуса и плечи неподвижными. Сгибай руки, затем медленно опускай рукоять под контролем. Не раскачивай корпус.",muscles:"Бицепс и другие сгибатели локтя"},id:"reverse-fly",name:"Обратная бабочка",sets:2,reps:"12–15",rest:75,image:"reverse-fly.jpg",startWeight:"5–10 кг",tech:"Грудь держи у опоры. Разводи руки в стороны, не пожимая плечами.",muscles:"Задняя часть плеч, верх спины"}]},
-{id:"C",day:"ПЯТНИЦА",title:"Тренировка C",subtitle:"Верх тела и дополнительные упражнения",focus:"Грудь · спина · икры · руки",exercises:[
-{id:"incline-press",name:"Наклонный жим в тренажёре",sets:3,reps:"8–12",rest:120,image:"incline-press.jpg",startWeight:"5–10 кг на сторону или минимальный вес",tech:"Настрой спинку под умеренным наклоном. Держи спину у опоры и стопы на полу. Выжимай вес без рывков.",muscles:"Верхняя часть груди, передние дельты, трицепс"},
-{id:"lat-pulldown-neutral",name:"Тяга верхнего блока нейтральным хватом",sets:3,reps:"8–12",rest:120,image:"lat-pulldown-neutral.jpg",startWeight:"15–25 кг",tech:"Используй нейтральную рукоять, если она есть. Тяни локти вниз, не раскачивая корпус.",muscles:"Широчайшие мышцы спины, бицепс"},
-{id:"calf-raise",name:"Подъёмы на носки сидя",sets:3,reps:"12–20",rest:75,image:"calf-raise.jpg",startWeight:"10–20 кг",tech:"Поднимай пятки в комфортной амплитуде, задержись наверху на секунду и медленно опускай.",muscles:"Икроножная и камбаловидная мышцы"},
-{id:"hip-abduction",name:"Разведение бёдер в тренажёре",sets:2,reps:"12–15",rest:75,image:"hip-abduction.jpg",startWeight:"10–20 кг",tech:"Сохраняй таз неподвижным и спину у опоры. Разводи колени плавно.",muscles:"Средняя ягодичная мышца и мышцы-стабилизаторы таза"},
-{id:"biceps-curl-dumbbell",name:"Сгибание рук с гантелями",sets:2,reps:"10–15",rest:75,image:"biceps-curl-dumbbell.jpg",startWeight:"5–10 кг",tech:"Держи локти стабильно. Не раскачивай корпус и опускай вес медленно.",muscles:"Бицепс"},
-
-{id:"front-raise",name:"Подъём г{id:"biceps-curl-incline",name:"Сгибание рук с гантелями на наклонной скамье",sets:3,reps:"10–12",rest:75,image:"incline-dumbbell-curl.jpg",startWeight:"4–6 кг на каждую руку",tech:"Установи спинку под углом 45–60°. Прижми спину и плечи к спинке, руки опусти вниз. Сгибай руки без раскачивания и не переразгибай локти.",muscles:"Бицепс, особенно длинная головка"},антелей перед собой",sets:2,reps:"12–15",rest:60,startWeight:"1–3 кг на руку",tech:"Возьми лёгкие гантели, слегка согни локти. Поднимай руки перед собой примерно до уровня плеч, без раскачивания корпуса и без прогиба в пояснице. Опускай медленно. Если передняя часть плеч уже сильно устаёт после жима или появляется боль, пропусти это упражнение.",muscles:"Передняя часть дельтовидных мышц"},{id:"triceps-pushdown",name:"Разгибание рук на блоке",sets:2,reps:"10–15",rest:75,image:"triceps-pushdown.jpg",startWeight:"5–10 кг",tech:"Локти держи близко к туловищу. Разгибай руки без рывков.",muscles:"Трицепс"}]}
+  {
+    "id": "A",
+    "day": "ПОНЕДЕЛЬНИК",
+    "title": "Тренировка A",
+    "subtitle": "Грудь · трицепс · пресс",
+    "focus": "Грудь · трицепс · пресс",
+    "exercises": [
+      {
+        "id": "chest-press",
+        "name": "Жим от груди в тренажёре",
+        "sets": 3,
+        "reps": "8–12",
+        "rest": 120,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0577-T0yTjgW.gif",
+        "tech": "Настрой сиденье так, чтобы рукояти были на уровне середины груди. Прижми спину к опоре, выжимай плавно.",
+        "muscles": "Грудные мышцы, трицепс",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "incline-press",
+        "name": "Наклонный жим от груди в тренажёре",
+        "sets": 3,
+        "reps": "8–12",
+        "rest": 120,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/1299-jHAnWmT.gif",
+        "tech": "Настрой умеренный наклон. Держи спину у опоры, опускай рукояти до комфортной глубины.",
+        "muscles": "Верх груди, передние дельты, трицепс",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "pec-deck",
+        "name": "Сведение рук в тренажёре («бабочка»)",
+        "sets": 2,
+        "reps": "10–15",
+        "rest": 90,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0596-v3xmPAR.gif",
+        "tech": "Прижми спину к спинке и своди рукояти перед собой без рывка.",
+        "muscles": "Грудные мышцы",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "db-bench",
+        "name": "Жим гантелей лёжа",
+        "sets": 2,
+        "reps": "8–12",
+        "rest": 120,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0289-SpYC0Kp.gif",
+        "tech": "Стопы на полу, лопатки сведены. Опускай гантели по сторонам груди и выжимай под контролем.",
+        "muscles": "Грудные мышцы, трицепс",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "triceps-push",
+        "name": "Разгибание рук на верхнем блоке",
+        "sets": 2,
+        "reps": "10–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0241-gAwDzB3.gif",
+        "tech": "Локти держи возле корпуса. Разгибай руки без раскачивания.",
+        "muscles": "Трицепс",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "triceps-overhead",
+        "name": "Разгибание рук из-за головы",
+        "sets": 2,
+        "reps": "10–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0092-5uFK1xr.gif",
+        "tech": "Удерживай корпус стабильно, локти направлены вверх. Не прогибай поясницу.",
+        "muscles": "Трицепс",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "bench-dips",
+        "name": "Обратные отжимания от скамьи",
+        "sets": 2,
+        "reps": "8–12",
+        "rest": 90,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0129-RrLske5.gif",
+        "tech": "Не опускайся глубоко. При дискомфорте в плечах пропусти упражнение.",
+        "muscles": "Трицепс",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "abs-leg-raise",
+        "name": "Подъём ног лёжа на скамье",
+        "sets": 3,
+        "reps": "10–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0620-WhuFnR7.gif",
+        "tech": "Ляг на скамью, держись за её край. Поднимай ноги без рывка, не раскачивай таз и опускай их подконтрольно, не прогибая поясницу.",
+        "muscles": "Прямая мышца живота",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "abs-decline",
+        "name": "Скручивания на наклонной скамье",
+        "sets": 3,
+        "reps": "10–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0282-QLL2gdc.gif",
+        "tech": "Поднимай корпус за счёт мышц живота, не тяни себя за шею. Двигайся плавно.",
+        "muscles": "Мышцы живота",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "abs-captain",
+        "name": "Подъём коленей в тренажёре капитанский стул",
+        "sets": 2,
+        "reps": "8–12",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/2963-weoDEpH.gif",
+        "tech": "Упрись предплечьями в подушки и прижми спину к опоре. Поднимай колени контролируемо, не раскачиваясь.",
+        "muscles": "Мышцы живота и сгибатели бедра",
+        "startWeight": "Начни с лёгкого веса"
+      }
+    ]
+  },
+  {
+    "id": "B",
+    "day": "СРЕДА",
+    "title": "Тренировка B",
+    "subtitle": "Ноги · плечи · пресс",
+    "focus": "Ноги · плечи · пресс",
+    "exercises": [
+      {
+        "id": "leg-extension",
+        "name": "Разгибание ног в тренажёре",
+        "sets": 3,
+        "reps": "10–15",
+        "rest": 90,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0585-my33uHU.gif",
+        "tech": "Совмести колени с осью тренажёра. Разгибай плавно, затем медленно опускай валик.",
+        "muscles": "Квадрицепсы",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "lying-leg-curl",
+        "name": "Сгибание ног лёжа",
+        "sets": 3,
+        "reps": "10–15",
+        "rest": 90,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0586-17lJ1kr.gif",
+        "tech": "Таз остаётся на скамье. Сгибай колени плавно, не поднимай таз.",
+        "muscles": "Задняя поверхность бедра",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "reverse-lunge",
+        "name": "Выпады назад",
+        "sets": 2,
+        "reps": "8–10 на ногу",
+        "rest": 90,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0381-SSsBDwB.gif",
+        "tech": "Начни без веса. Шаг назад, комфортная амплитуда, устойчивый корпус.",
+        "muscles": "Квадрицепсы, ягодичные мышцы",
+        "startWeight": "Сначала без веса"
+      },
+      {
+        "id": "hip-abduction",
+        "name": "Разведение бёдер в тренажёре",
+        "sets": 2,
+        "reps": "12–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0597-CHpahtl.gif",
+        "tech": "Спина у опоры, таз неподвижен. Разводи колени плавно.",
+        "muscles": "Средняя ягодичная мышца",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "hip-adduction",
+        "name": "Сведение бёдер в тренажёре",
+        "sets": 2,
+        "reps": "12–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0598-oHsrypV.gif",
+        "tech": "Сохраняй спину у опоры. Своди колени плавно, без инерции.",
+        "muscles": "Приводящие мышцы бедра",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "calf-raise",
+        "name": "Подъёмы на носки сидя",
+        "sets": 3,
+        "reps": "12–20",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0594-bOOdeyc.gif",
+        "tech": "Опускай пятки в комфортную растяжку и поднимайся на носки с паузой наверху.",
+        "muscles": "Икроножная и камбаловидная мышцы",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "shoulder-press",
+        "name": "Жим вверх в тренажёре на плечи",
+        "sets": 2,
+        "reps": "10–12",
+        "rest": 90,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0603-67n3r98.gif",
+        "tech": "Рукояти примерно на уровне ушей. Не прогибай поясницу, выжимай плавно.",
+        "muscles": "Дельтовидные мышцы, трицепс",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "lateral-raise",
+        "name": "Махи гантелями в стороны",
+        "sets": 3,
+        "reps": "12–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0334-DsgkuIt.gif",
+        "tech": "Лёгкие гантели, слегка согнутые локти. Поднимай руки до уровня плеч без раскачивания.",
+        "muscles": "Средняя дельта",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "abs-leg-raise",
+        "name": "Подъём ног лёжа на скамье",
+        "sets": 3,
+        "reps": "10–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0620-WhuFnR7.gif",
+        "tech": "Ляг на скамью, держись за её край. Поднимай ноги без рывка, не раскачивай таз и опускай их подконтрольно, не прогибая поясницу.",
+        "muscles": "Прямая мышца живота",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "abs-decline",
+        "name": "Скручивания на наклонной скамье",
+        "sets": 3,
+        "reps": "10–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0282-QLL2gdc.gif",
+        "tech": "Поднимай корпус за счёт мышц живота, не тяни себя за шею. Двигайся плавно.",
+        "muscles": "Мышцы живота",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "abs-captain",
+        "name": "Подъём коленей в тренажёре капитанский стул",
+        "sets": 2,
+        "reps": "8–12",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/2963-weoDEpH.gif",
+        "tech": "Упрись предплечьями в подушки и прижми спину к опоре. Поднимай колени контролируемо, не раскачиваясь.",
+        "muscles": "Мышцы живота и сгибатели бедра",
+        "startWeight": "Начни с лёгкого веса"
+      }
+    ]
+  },
+  {
+    "id": "C",
+    "day": "ПЯТНИЦА",
+    "title": "Тренировка C",
+    "subtitle": "Спина · бицепс · пресс",
+    "focus": "Спина · бицепс · пресс",
+    "exercises": [
+      {
+        "id": "lat-pulldown",
+        "name": "Тяга верхнего блока к груди",
+        "sets": 3,
+        "reps": "8–12",
+        "rest": 120,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/2330-LEprlgG.gif",
+        "tech": "Зафиксируй бёдра. Тяни рукоять к верхней части груди, локти вниз. Не тяни за голову.",
+        "muscles": "Широчайшие мышцы спины, бицепс",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "row-machine",
+        "name": "Тяга в тренажёре сидя",
+        "sets": 3,
+        "reps": "8–12",
+        "rest": 120,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/1350-7I6LNUG.gif",
+        "tech": "Сохраняй устойчивое положение корпуса. Тяни рукояти к корпусу, сводя лопатки.",
+        "muscles": "Средняя часть спины, широчайшие",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "seated-row",
+        "name": "Горизонтальная тяга нижнего блока",
+        "sets": 2,
+        "reps": "10–12",
+        "rest": 90,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0861-fUBheHs.gif",
+        "tech": "Держи спину нейтрально. Тяни рукоять к животу, сводя лопатки, не раскачиваясь.",
+        "muscles": "Широчайшие и средняя часть спины",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "reverse-fly",
+        "name": "Обратная бабочка",
+        "sets": 2,
+        "reps": "12–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0602-myfUsKf.gif",
+        "tech": "Грудь держи у опоры. Разводи руки в стороны, не пожимая плечами.",
+        "muscles": "Задние дельты, верх спины",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "machine-curl",
+        "name": "Сгибание рук на бицепс в тренажёре",
+        "sets": 2,
+        "reps": "10–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0592-b6hQYMb.gif",
+        "tech": "Плечи прижаты к опоре. Сгибай руки без движения локтей вперёд.",
+        "muscles": "Бицепс",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "cable-curl",
+        "name": "Сгибание рук на нижнем блоке",
+        "sets": 2,
+        "reps": "10–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0868-G08RZcQ.gif",
+        "tech": "Локти возле корпуса, плечи неподвижны. Сгибай и медленно опускай рукоять.",
+        "muscles": "Бицепс",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "hammer-curl",
+        "name": "Молотковые сгибания с гантелями",
+        "sets": 2,
+        "reps": "10–15 на руку",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0313-slDvUAU.gif",
+        "tech": "Держи гантели нейтральным хватом. Не раскачивай корпус.",
+        "muscles": "Бицепс и плечелучевая мышца",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "incline-curl",
+        "name": "Сгибание рук с гантелями на наклонной скамье",
+        "sets": 2,
+        "reps": "10–12",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0315-F3xgbjF.gif",
+        "tech": "Установи спинку под умеренным наклоном. Не выводи локти вперёд и не раскачивай корпус.",
+        "muscles": "Бицепс",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "abs-leg-raise",
+        "name": "Подъём ног лёжа на скамье",
+        "sets": 3,
+        "reps": "10–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0620-WhuFnR7.gif",
+        "tech": "Ляг на скамью, держись за её край. Поднимай ноги без рывка, не раскачивай таз и опускай их подконтрольно, не прогибая поясницу.",
+        "muscles": "Прямая мышца живота",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "abs-decline",
+        "name": "Скручивания на наклонной скамье",
+        "sets": 3,
+        "reps": "10–15",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0282-QLL2gdc.gif",
+        "tech": "Поднимай корпус за счёт мышц живота, не тяни себя за шею. Двигайся плавно.",
+        "muscles": "Мышцы живота",
+        "startWeight": "Начни с лёгкого веса"
+      },
+      {
+        "id": "abs-captain",
+        "name": "Подъём коленей в тренажёре капитанский стул",
+        "sets": 2,
+        "reps": "8–12",
+        "rest": 75,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/2963-weoDEpH.gif",
+        "tech": "Упрись предплечьями в подушки и прижми спину к опоре. Поднимай колени контролируемо, не раскачиваясь.",
+        "muscles": "Мышцы живота и сгибатели бедра",
+        "startWeight": "Начни с лёгкого веса"
+      }
+    ]
+  }
 ];
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const todayISO=()=>new Date().toISOString().slice(0,10);
@@ -41,10 +398,10 @@ function nextWorkout(){const last=[...state.sessions].filter(s=>s.completedAt).s
 function renderHome(){const n=nextWorkout();$("#weekCount").textContent=workoutDoneThisWeek();$("#nextDayTag").textContent=n.day;$("#nextWorkoutTitle").textContent=n.title;$("#nextWorkoutSubtitle").textContent=`${n.subtitle} · ${n.exercises.length} упражнений`;$("#totalWorkouts").textContent=state.sessions.filter(s=>s.completedAt).length;const lw=latestWeight();$("#latestBodyWeight").textContent=lw?`${Number(lw.weight).toLocaleString("ru-RU",{maximumFractionDigits:1})} кг`:"—";const ws=[...state.bodyWeights].sort((a,b)=>a.date.localeCompare(b.date));$("#bodyWeightChange").textContent=ws.length>1?`${ws.at(-1).weight-ws[0].weight>0?"+":""}${(ws.at(-1).weight-ws[0].weight).toFixed(1)} кг за период`:"добавь первое измерение";$("#homeWorkoutList").innerHTML=workouts.map(w=>`<button class="workout-card" data-start="${w.id}"><span class="workout-letter">${w.id}</span><span class="workout-card-copy"><strong>${w.title} · ${w.day.toLowerCase()}</strong><span>${w.subtitle} · ${w.exercises.length} упражнений</span></span><span class="workout-arrow">›</span></button>`).join("");$$("[data-start]").forEach(b=>b.addEventListener("click",()=>startWorkout(b.dataset.start)))}
 function startWorkout(id){activeWorkoutId=id;const w=getWorkout(id),d=state.draft&&state.draft.workoutId===id?state.draft:null;activeSession=d||{id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),workoutId:id,date:todayISO(),startedAt:new Date().toISOString(),completedAt:null,exercises:w.exercises.map(e=>({exerciseId:e.id,name:e.name,sets:Array.from({length:e.sets},()=>({weight:"",reps:"",done:false}))}))};$("#activeWorkoutDay").textContent=w.day;$("#activeWorkoutTitle").textContent=w.title;renderActiveWorkout();navigate("workout")}
 function persistDraft(){state.draft=activeSession;saveState()}
-function renderActiveWorkout(){if(!activeSession)return;const w=getWorkout(activeWorkoutId),done=activeSession.exercises.reduce((n,e)=>n+e.sets.filter(s=>s.done).length,0),total=activeSession.exercises.reduce((n,e)=>n+e.sets.length,0);$("#exerciseCounter").textContent=`${done} / ${total}`;$("#workoutProgressBar").style.width=`${total?done/total*100:0}%`;$("#activeExerciseList").innerHTML=activeSession.exercises.map((se,ei)=>{const ex=w.exercises.find(e=>e.id===se.exerciseId)||w.exercises[ei];return `<article class="exercise-card ${se.sets.every(s=>s.done)?"done":""}">${ex.image?`<img class="tech-image exercise-image" src="${esc(ex.image.startsWith("http")?ex.image:"./images/"+ex.image)}" alt="${esc(ex.name)}" loading="lazy">`:""}<div class="exercise-title-row"><div class="exercise-title-copy"><h3>${esc(se.name)}</h3><p class="muted">${ex.reps} повторений · ${ex.rest} сек отдыха</p></div><button class="tech-button" data-tech="${ei}">Техника</button></div><div class="set-header"><span>№</span><span>Вес, кг</span><span>Повторы</span><span>✓</span></div>${se.sets.map((s,si)=>`<div class="set-row"><span class="set-number">${si+1}</span><input class="number-input set-weight" type="number" min="0" step=".5" placeholder="—" value="${esc(s.weight)}" data-ei="${ei}" data-si="${si}" data-field="weight"><input class="number-input set-reps" type="number" min="0" max="100" step="1" placeholder="${ex.reps.split("–")[0]}" value="${esc(s.reps)}" data-ei="${ei}" data-si="${si}" data-field="reps"><button class="set-check ${s.done?"checked":""}" data-check="${ei}:${si}">✓</button></div>`).join("")}<div class="exercise-footer"><button class="mini-button accent" data-addset="${ei}">＋ Добавить подход</button><button class="mini-button" data-rest="${ei}">⏱ Отдых</button></div></article>`}).join("");$$("[data-tech]").forEach(b=>b.onclick=()=>showTechnique(+b.dataset.tech));$$("[data-check]").forEach(b=>b.onclick=()=>toggleSet(b.dataset.check));$$("[data-addset]").forEach(b=>b.onclick=()=>addSet(+b.dataset.addset));$$("[data-rest]").forEach(b=>b.onclick=()=>openTimer(w.exercises[+b.dataset.rest].rest));$$(".set-weight,.set-reps").forEach(i=>i.onchange=()=>{activeSession.exercises[+i.dataset.ei].sets[+i.dataset.si][i.dataset.field]=i.value;persistDraft()});$$("#activeExerciseList img").forEach(i=>i.onerror=()=>i.remove());persistDraft()}
+function renderActiveWorkout(){if(!activeSession)return;const w=getWorkout(activeWorkoutId),done=activeSession.exercises.reduce((n,e)=>n+e.sets.filter(s=>s.done).length,0),total=activeSession.exercises.reduce((n,e)=>n+e.sets.length,0);$("#exerciseCounter").textContent=`${done} / ${total}`;$("#workoutProgressBar").style.width=`${total?done/total*100:0}%`;$("#activeExerciseList").innerHTML=activeSession.exercises.map((se,ei)=>{const ex=w.exercises.find(e=>e.id===se.exerciseId)||w.exercises[ei];return `<article class="exercise-card ${se.sets.every(s=>s.done)?"done":""}">${ex.gif?`<img class="tech-image exercise-image" src="${esc(ex.gif)}" alt="${esc(ex.name)}" loading="lazy">`:""}<div class="exercise-title-row"><div class="exercise-title-copy"><h3>${esc(se.name)}</h3><p class="muted">${ex.reps} повторений · ${ex.rest} сек отдыха</p></div><button class="tech-button" data-tech="${ei}">Техника</button></div><div class="set-header"><span>№</span><span>Вес, кг</span><span>Повторы</span><span>✓</span></div>${se.sets.map((s,si)=>`<div class="set-row"><span class="set-number">${si+1}</span><input class="number-input set-weight" type="number" min="0" step=".5" placeholder="—" value="${esc(s.weight)}" data-ei="${ei}" data-si="${si}" data-field="weight"><input class="number-input set-reps" type="number" min="0" max="100" step="1" placeholder="${ex.reps.split("–")[0]}" value="${esc(s.reps)}" data-ei="${ei}" data-si="${si}" data-field="reps"><button class="set-check ${s.done?"checked":""}" data-check="${ei}:${si}">✓</button></div>`).join("")}<div class="exercise-footer"><button class="mini-button accent" data-addset="${ei}">＋ Добавить подход</button><button class="mini-button" data-rest="${ei}">⏱ Отдых</button></div></article>`}).join("");$$("[data-tech]").forEach(b=>b.onclick=()=>showTechnique(+b.dataset.tech));$$("[data-check]").forEach(b=>b.onclick=()=>toggleSet(b.dataset.check));$$("[data-addset]").forEach(b=>b.onclick=()=>addSet(+b.dataset.addset));$$("[data-rest]").forEach(b=>b.onclick=()=>openTimer(w.exercises[+b.dataset.rest].rest));$$(".set-weight,.set-reps").forEach(i=>i.onchange=()=>{activeSession.exercises[+i.dataset.ei].sets[+i.dataset.si][i.dataset.field]=i.value;persistDraft()});$$("#activeExerciseList img").forEach(i=>i.onerror=()=>i.remove());persistDraft()}
 function toggleSet(k){const [ei,si]=k.split(":").map(Number),s=activeSession.exercises[ei].sets[si];s.done=!s.done;if(s.done)openTimer(getWorkout(activeWorkoutId).exercises[ei].rest);renderActiveWorkout()}
 function addSet(ei){activeSession.exercises[ei].sets.push({weight:"",reps:"",done:false});renderActiveWorkout();showToast("Подход добавлен")}
-function showTechnique(i){const se=activeSession.exercises[i],ex=getWorkout(activeWorkoutId).exercises.find(e=>e.id===se.exerciseId)||getWorkout(activeWorkoutId).exercises[i];$("#dialogExerciseTitle").textContent=ex.name;$("#dialogExerciseBody").innerHTML=`${ex.image?`<img class="tech-image" src="./images/${esc(ex.image)}" alt="${esc(ex.name)}">`:""}<p class="muted">${esc(ex.muscles)}</p><h3>Техника выполнения</h3><p>${esc(ex.tech)}</p><div class="panel"><p><strong>План:</strong> ${ex.sets} подхода по ${ex.reps} повторений.</p>${ex.startWeight?`<p><strong>Стартовый ориентир:</strong> ${esc(ex.startWeight)}</p>`:""}<p class="muted small">Начинай с лёгкой нагрузки, оставляй 3–4 повтора в запасе и не выполняй упражнение через боль.</p></div>`;$("#exerciseDialog").showModal()}
+function showTechnique(i){const se=activeSession.exercises[i],ex=getWorkout(activeWorkoutId).exercises.find(e=>e.id===se.exerciseId)||getWorkout(activeWorkoutId).exercises[i];$("#dialogExerciseTitle").textContent=ex.name;$("#dialogExerciseBody").innerHTML=`${ex.gif?`<img class="tech-image" src="${esc(ex.gif)}" alt="${esc(ex.name)}">`:""}<p class="muted">${esc(ex.muscles)}</p><h3>Техника выполнения</h3><p>${esc(ex.tech)}</p><div class="panel"><p><strong>План:</strong> ${ex.sets} подхода по ${ex.reps} повторений.</p>${ex.startWeight?`<p><strong>Стартовый ориентир:</strong> ${esc(ex.startWeight)}</p>`:""}<p class="muted small">Начинай с лёгкой нагрузки, оставляй 3–4 повтора в запасе и не выполняй упражнение через боль.</p></div>`;$("#exerciseDialog").showModal()}
 function finishWorkout(){if(!activeSession)return;const n=activeSession.exercises.reduce((a,e)=>a+e.sets.filter(s=>s.done).length,0);if(!n&&!confirm("Ты ещё не отметил ни одного подхода. Всё равно завершить тренировку?"))return;activeSession.completedAt=new Date().toISOString();activeSession.exercises.forEach(e=>e.sets.forEach(s=>{s.weight=Number(s.weight)||0;s.reps=Number(s.reps)||0}));state.sessions.push(activeSession);state.draft=null;saveState();activeSession=null;activeWorkoutId=null;showToast("Тренировка сохранена");navigate("history")}
 function renderHistory(){const ss=[...state.sessions].filter(s=>s.completedAt).sort((a,b)=>b.completedAt.localeCompare(a.completedAt));$("#historySessions").innerHTML=ss.length?ss.map(s=>{const w=getWorkout(s.workoutId),n=s.exercises.reduce((a,e)=>a+e.sets.filter(x=>x.done).length,0);return `<div class="history-item"><div class="history-item-top"><div><h3>${w.title}</h3><p class="muted">${fmtDate(s.date)} · ${w.day.toLowerCase()}</p></div><span class="tag">${n} подходов</span></div><div class="history-summary">${s.exercises.filter(e=>e.sets.some(x=>x.done)).map(e=>esc(e.name)).join(" · ")}</div></div>`}).join(""):`<div class="empty-state">Здесь появятся завершённые тренировки. Выбери тренировку на главной и отмечай подходы.</div>`;renderWeightHistory()}
 function renderWeightHistory(){$("#historyWeights").innerHTML=state.bodyWeights.length?[...state.bodyWeights].sort((a,b)=>b.date.localeCompare(a.date)||b.createdAt-a.createdAt).map(w=>`<div class="history-item"><div class="history-item-top"><div><h3>${Number(w.weight).toLocaleString("ru-RU",{maximumFractionDigits:1})} кг</h3><p class="muted">${fmtDate(w.date)}</p></div><button class="mini-button" data-delete-weight="${w.id}">Удалить</button></div></div>`).join(""):`<div class="empty-state">Пока нет измерений. Добавь вес во вкладке «Профиль».</div>`;$$("[data-delete-weight]").forEach(b=>b.onclick=()=>{if(confirm("Удалить это измерение?")){state.bodyWeights=state.bodyWeights.filter(w=>w.id!==b.dataset.deleteWeight);saveState();renderHistory();renderProgress();renderHome()}})}
