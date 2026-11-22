@@ -1,4 +1,4 @@
-const CACHE_NAME = "fittrack-cache-v25";
+const CACHE_NAME = "fittrack-cache-v26";
 
 const APP_FILES = [
   "./",
