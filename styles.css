@@ -247,3 +247,20 @@ dialog{box-shadow:0 24px 70px #0008}
   #view-home .goal-footer{margin-top:7px;gap:7px}
   #view-home .goal-edit{padding:6px 9px;min-height:29px;font-size:9px}
 }
+
+
+/* Weight goal card in Progress view */
+#view-progress .goal-card{margin:14px 0 18px}
+@media(max-width:599px){
+  #view-progress .goal-card{padding:12px 14px 11px;margin:12px 0 16px;border-radius:17px}
+  #view-progress .goal-card .eyebrow{margin-bottom:3px;font-size:9px}
+  #view-progress .goal-card h2{font-size:17px;line-height:1.15}
+  #view-progress .goal-icon{width:30px;height:30px;border-radius:10px;font-size:18px}
+  #view-progress .goal-numbers{margin:9px 0 7px;gap:8px}
+  #view-progress .goal-numbers strong{font-size:20px}
+  #view-progress .goal-numbers span,#view-progress .goal-footer span{font-size:9px}
+  #view-progress .goal-target strong{font-size:17px}
+  #view-progress .goal-track{height:7px}
+  #view-progress .goal-footer{margin-top:7px;gap:7px}
+  #view-progress .goal-edit{padding:6px 9px;min-height:29px;font-size:9px}
+}
