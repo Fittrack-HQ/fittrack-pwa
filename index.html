@@ -91,6 +91,10 @@
 
   box.innerHTML += "<br>Установленная версия: " +
     (registration?.installing?.state || "нет");
+ const cacheNames = await caches.keys();
+
+  box.innerHTML += "<br>Версия кэша: " +
+    (cacheNames.filter(name => name.startsWith("fittrack-cache-")).join(", ") || "не найден");
 
   box.innerHTML += "<br>Адрес: " + location.origin;
 })();
