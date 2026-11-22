@@ -32,7 +32,7 @@ const workouts = [
       {
         "id": "pec-deck",
         "name": "Сведение рук в тренажёре («бабочка»)",
-        "sets": 2,
+        "sets": 3,
         "reps": "10–15",
         "rest": 90,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0596-v3xmPAR.gif",
@@ -43,7 +43,7 @@ const workouts = [
       {
         "id": "db-bench",
         "name": "Жим гантелей лёжа",
-        "sets": 2,
+        "sets": 3,
         "reps": "8–12",
         "rest": 120,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0289-SpYC0Kp.gif",
@@ -54,7 +54,7 @@ const workouts = [
       {
         "id": "triceps-push",
         "name": "Разгибание рук на верхнем блоке",
-        "sets": 2,
+        "sets": 3,
         "reps": "10–15",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0241-gAwDzB3.gif",
@@ -65,7 +65,7 @@ const workouts = [
       {
         "id": "triceps-overhead",
         "name": "Разгибание рук из-за головы",
-        "sets": 2,
+        "sets": 3,
         "reps": "10–15",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0092-5uFK1xr.gif",
@@ -76,7 +76,7 @@ const workouts = [
       {
         "id": "bench-dips",
         "name": "Обратные отжимания от скамьи",
-        "sets": 2,
+        "sets": 3,
         "reps": "8–12",
         "rest": 90,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0129-RrLske5.gif",
@@ -109,7 +109,7 @@ const workouts = [
       {
         "id": "abs-captain",
         "name": "Подъём коленей в тренажёре капитанский стул",
-        "sets": 2,
+        "sets": 3,
         "reps": "8–12",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/2963-weoDEpH.gif",
@@ -151,7 +151,7 @@ const workouts = [
       {
         "id": "reverse-lunge",
         "name": "Выпады назад",
-        "sets": 2,
+        "sets": 3,
         "reps": "8–10 на ногу",
         "rest": 90,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0381-SSsBDwB.gif",
@@ -162,7 +162,7 @@ const workouts = [
       {
         "id": "hip-abduction",
         "name": "Разведение бёдер в тренажёре",
-        "sets": 2,
+        "sets": 3,
         "reps": "12–15",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0597-CHpahtl.gif",
@@ -173,7 +173,7 @@ const workouts = [
       {
         "id": "hip-adduction",
         "name": "Сведение бёдер в тренажёре",
-        "sets": 2,
+        "sets": 3,
         "reps": "12–15",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0598-oHsrypV.gif",
@@ -195,7 +195,7 @@ const workouts = [
       {
         "id": "shoulder-press",
         "name": "Жим вверх в тренажёре на плечи",
-        "sets": 2,
+        "sets": 3,
         "reps": "10–12",
         "rest": 90,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0603-67n3r98.gif",
@@ -239,7 +239,7 @@ const workouts = [
       {
         "id": "abs-captain",
         "name": "Подъём коленей в тренажёре капитанский стул",
-        "sets": 2,
+        "sets": 3,
         "reps": "8–12",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/2963-weoDEpH.gif",
@@ -257,14 +257,14 @@ const workouts = [
     "focus": "Спина · бицепс · пресс",
     "exercises": [
       {
-        "id": "lat-pulldown",
-        "name": "Тяга верхнего блока к груди",
+        "id": "dumbbell-pullover",
+        "name": "Пуловер с гантелью лёжа",
         "sets": 3,
-        "reps": "8–12",
-        "rest": 120,
-        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/2330-LEprlgG.gif",
-        "tech": "Зафиксируй бёдра. Тяни рукоять к верхней части груди, локти вниз. Не тяни за голову.",
-        "muscles": "Широчайшие мышцы спины, бицепс",
+        "reps": "10–12",
+        "rest": 90,
+        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0375-9XjtHvS.gif",
+        "tech": "Ляг на скамью, стопы поставь на пол. Держи одну гантель двумя руками над грудью, слегка согни локти. Медленно опускай гантель за голову до комфортного растяжения, затем верни над грудью. Не прогибай поясницу и не опускай слишком глубоко.",
+        "muscles": "Широчайшие мышцы спины, грудные мышцы",
         "startWeight": "Начни с лёгкого веса"
       },
       {
@@ -281,7 +281,7 @@ const workouts = [
       {
         "id": "seated-row",
         "name": "Горизонтальная тяга нижнего блока",
-        "sets": 2,
+        "sets": 3,
         "reps": "10–12",
         "rest": 90,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0861-fUBheHs.gif",
@@ -292,7 +292,7 @@ const workouts = [
       {
         "id": "reverse-fly",
         "name": "Обратная бабочка",
-        "sets": 2,
+        "sets": 3,
         "reps": "12–15",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0602-myfUsKf.gif",
@@ -303,7 +303,7 @@ const workouts = [
       {
         "id": "machine-curl",
         "name": "Сгибание рук на бицепс в тренажёре",
-        "sets": 2,
+        "sets": 3,
         "reps": "10–15",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0592-b6hQYMb.gif",
@@ -314,7 +314,7 @@ const workouts = [
       {
         "id": "cable-curl",
         "name": "Сгибание рук на нижнем блоке",
-        "sets": 2,
+        "sets": 3,
         "reps": "10–15",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0868-G08RZcQ.gif",
@@ -325,7 +325,7 @@ const workouts = [
       {
         "id": "hammer-curl",
         "name": "Молотковые сгибания с гантелями",
-        "sets": 2,
+        "sets": 3,
         "reps": "10–15 на руку",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0313-slDvUAU.gif",
@@ -336,7 +336,7 @@ const workouts = [
       {
         "id": "incline-curl",
         "name": "Сгибание рук с гантелями на наклонной скамье",
-        "sets": 2,
+        "sets": 3,
         "reps": "10–12",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0315-F3xgbjF.gif",
@@ -369,7 +369,7 @@ const workouts = [
       {
         "id": "abs-captain",
         "name": "Подъём коленей в тренажёре капитанский стул",
-        "sets": 2,
+        "sets": 3,
         "reps": "8–12",
         "rest": 75,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/2963-weoDEpH.gif",
@@ -396,7 +396,7 @@ function navigate(v){$$(".view").forEach(e=>e.classList.toggle("active",e.id===`
 function workoutDoneThisWeek(){const n=new Date(),m=new Date(n);m.setDate(n.getDate()-((n.getDay()+6)%7));m.setHours(0,0,0,0);return state.sessions.filter(s=>s.completedAt&&new Date(s.completedAt)>=m).length}
 function nextWorkout(){const last=[...state.sessions].filter(s=>s.completedAt).sort((a,b)=>b.completedAt.localeCompare(a.completedAt))[0];if(!last)return workouts[0];return workouts[(workouts.findIndex(w=>w.id===last.workoutId)+1)%workouts.length]}
 function renderHome(){const n=nextWorkout();$("#weekCount").textContent=workoutDoneThisWeek();$("#nextDayTag").textContent=n.day;$("#nextWorkoutTitle").textContent=n.title;$("#nextWorkoutSubtitle").textContent=`${n.subtitle} · ${n.exercises.length} упражнений`;$("#totalWorkouts").textContent=state.sessions.filter(s=>s.completedAt).length;const lw=latestWeight();$("#latestBodyWeight").textContent=lw?`${Number(lw.weight).toLocaleString("ru-RU",{maximumFractionDigits:1})} кг`:"—";const ws=[...state.bodyWeights].sort((a,b)=>a.date.localeCompare(b.date));$("#bodyWeightChange").textContent=ws.length>1?`${ws.at(-1).weight-ws[0].weight>0?"+":""}${(ws.at(-1).weight-ws[0].weight).toFixed(1)} кг за период`:"добавь первое измерение";$("#homeWorkoutList").innerHTML=workouts.map(w=>`<button class="workout-card" data-start="${w.id}"><span class="workout-letter">${w.id}</span><span class="workout-card-copy"><strong>${w.title} · ${w.day.toLowerCase()}</strong><span>${w.subtitle} · ${w.exercises.length} упражнений</span></span><span class="workout-arrow">›</span></button>`).join("");$$("[data-start]").forEach(b=>b.addEventListener("click",()=>startWorkout(b.dataset.start)))}
-function startWorkout(id){activeWorkoutId=id;const w=getWorkout(id),draftMatches=state.draft&&state.draft.workoutId===id&&Array.isArray(state.draft.exercises)&&state.draft.exercises.length===w.exercises.length&&w.exercises.every((e,i)=>state.draft.exercises[i]?.exerciseId===e.id),d=draftMatches?state.draft:null;activeSession=d||{id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),workoutId:id,date:todayISO(),startedAt:new Date().toISOString(),completedAt:null,exercises:w.exercises.map(e=>({exerciseId:e.id,name:e.name,sets:Array.from({length:e.sets},()=>({weight:"",reps:"",done:false}))}))};$("#activeWorkoutDay").textContent=w.day;$("#activeWorkoutTitle").textContent=w.title;renderActiveWorkout();navigate("workout")}
+function startWorkout(id){activeWorkoutId=id;const w=getWorkout(id),draftMatches=state.draft&&state.draft.workoutId===id&&Array.isArray(state.draft.exercises)&&state.draft.exercises.length===w.exercises.length&&w.exercises.every((e,i)=>state.draft.exercises[i]?.exerciseId===e.id&&state.draft.exercises[i]?.sets?.length===e.sets),d=draftMatches?state.draft:null;activeSession=d||{id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),workoutId:id,date:todayISO(),startedAt:new Date().toISOString(),completedAt:null,exercises:w.exercises.map(e=>({exerciseId:e.id,name:e.name,sets:Array.from({length:e.sets},()=>({weight:"",reps:"",done:false}))}))};$("#activeWorkoutDay").textContent=w.day;$("#activeWorkoutTitle").textContent=w.title;renderActiveWorkout();navigate("workout")}
 function persistDraft(){state.draft=activeSession;saveState()}
 function renderActiveWorkout(){if(!activeSession)return;const w=getWorkout(activeWorkoutId),done=activeSession.exercises.reduce((n,e)=>n+e.sets.filter(s=>s.done).length,0),total=activeSession.exercises.reduce((n,e)=>n+e.sets.length,0);$("#exerciseCounter").textContent=`${done} / ${total}`;$("#workoutProgressBar").style.width=`${total?done/total*100:0}%`;$("#activeExerciseList").innerHTML=activeSession.exercises.map((se,ei)=>{const ex=w.exercises.find(e=>e.id===se.exerciseId)||w.exercises[ei];return `<article class="exercise-card ${se.sets.every(s=>s.done)?"done":""}">${ex.gif?`<img class="tech-image exercise-image" src="${esc(ex.gif)}" alt="${esc(ex.name)}" loading="lazy">`:""}<div class="exercise-title-row"><div class="exercise-title-copy"><h3>${esc(se.name)}</h3><p class="muted">${ex.reps} повторений · ${ex.rest} сек отдыха</p></div><button class="tech-button" data-tech="${ei}">Техника</button></div><div class="set-header"><span>№</span><span>Вес, кг</span><span>Повторы</span><span>✓</span></div>${se.sets.map((s,si)=>`<div class="set-row"><span class="set-number">${si+1}</span><input class="number-input set-weight" type="number" min="0" step=".5" placeholder="—" value="${esc(s.weight)}" data-ei="${ei}" data-si="${si}" data-field="weight"><input class="number-input set-reps" type="number" min="0" max="100" step="1" placeholder="${ex.reps.split("–")[0]}" value="${esc(s.reps)}" data-ei="${ei}" data-si="${si}" data-field="reps"><button class="set-check ${s.done?"checked":""}" data-check="${ei}:${si}">✓</button></div>`).join("")}<div class="exercise-footer"><button class="mini-button accent" data-addset="${ei}">＋ Добавить подход</button><button class="mini-button" data-rest="${ei}">⏱ Отдых</button></div></article>`}).join("");$$("[data-tech]").forEach(b=>b.onclick=()=>showTechnique(+b.dataset.tech));$$("[data-check]").forEach(b=>b.onclick=()=>toggleSet(b.dataset.check));$$("[data-addset]").forEach(b=>b.onclick=()=>addSet(+b.dataset.addset));$$("[data-rest]").forEach(b=>b.onclick=()=>openTimer(w.exercises[+b.dataset.rest].rest));$$(".set-weight,.set-reps").forEach(i=>i.onchange=()=>{activeSession.exercises[+i.dataset.ei].sets[+i.dataset.si][i.dataset.field]=i.value;persistDraft()});$$("#activeExerciseList img").forEach(i=>i.onerror=()=>i.remove());persistDraft()}
 function toggleSet(k){const [ei,si]=k.split(":").map(Number),s=activeSession.exercises[ei].sets[si];s.done=!s.done;if(s.done)openTimer(getWorkout(activeWorkoutId).exercises[ei].rest);renderActiveWorkout()}
