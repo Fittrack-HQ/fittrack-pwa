@@ -264,3 +264,9 @@ dialog{box-shadow:0 24px 70px #0008}
   #view-progress .goal-footer{margin-top:7px;gap:7px}
   #view-progress .goal-edit{padding:6px 9px;min-height:29px;font-size:9px}
 }
+
+/* Exercise GIFs: slightly smaller and fully visible */
+.tech-image {
+  max-height: 170px;
+  object-fit: contain;
+}
