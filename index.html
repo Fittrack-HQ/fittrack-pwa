@@ -66,37 +66,4 @@
 <dialog id="installDialog"><div class="dialog-head"><h2>Установка FitTrack</h2><button id="closeInstall" class="icon-button">✕</button></div><p>В Safari открой меню «Поделиться», выбери «На экран Домой», затем нажми «Добавить».</p></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="./app.js"></script>
- <script>
-(async () => {
-  const box = document.createElement("div");
-  box.style.cssText = "margin:16px;padding:14px;background:#202a32;color:white;border-radius:12px;font-size:14px;line-height:1.7";
-  box.innerHTML = "<b>Диагностика FitTrack</b><br>Проверка Service Worker...";
-  document.body.appendChild(box);
-
-  if (!("serviceWorker" in navigator)) {
-    box.innerHTML += "<br>Service Worker: не поддерживается";
-    return;
-  }
-
-  const registration = await navigator.serviceWorker.getRegistration("./");
-
-  box.innerHTML += "<br>Текущий контроллер: " +
-    (navigator.serviceWorker.controller ? "есть" : "нет");
-
-  box.innerHTML += "<br>Активная версия: " +
-    (registration?.active?.state || "не найдена");
-
-  box.innerHTML += "<br>Ожидающая версия: " +
-    (registration?.waiting?.state || "нет");
-
-  box.innerHTML += "<br>Установленная версия: " +
-    (registration?.installing?.state || "нет");
- const cacheNames = await caches.keys();
-
-  box.innerHTML += "<br>Версия кэша: " +
-    (cacheNames.filter(name => name.startsWith("fittrack-cache-")).join(", ") || "не найден");
-
-  box.innerHTML += "<br>Адрес: " + location.origin;
-})();
-</script>
 </body></html>
