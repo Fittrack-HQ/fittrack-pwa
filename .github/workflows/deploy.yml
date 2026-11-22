@@ -1,0 +1,34 @@
+
+name: Deploy FitTrack to Yandex Object Storage
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check AWS CLI
+        run: aws --version
+
+      - name: Sync FitTrack to Yandex Object Storage
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.YC_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.YC_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ru-central1
+        run: |
+          aws s3 sync . s3://fittrack-app \
+            --endpoint-url https://storage.yandexcloud.net \
+            --region ru-central1 \
+            --no-progress \
+            --exclude ".git/*" \
+            --exclude ".github/*"
