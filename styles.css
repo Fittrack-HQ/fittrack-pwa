@@ -125,3 +125,49 @@ dialog{box-shadow:0 24px 70px #0008}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 }
+
+/* Home dashboard redesign */
+.home-hero{padding:21px 19px 19px;margin-bottom:14px}
+.home-hero h1{font-size:clamp(27px,6.6vw,36px);margin-bottom:8px}
+.home-hero .muted{font-size:12px}
+.home-stats{display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:8px;margin:12px 0 14px}
+.home-stats .stat-card{padding:13px 11px;min-width:0;border-radius:16px}
+.home-stats .stat-card span{font-size:10px;min-height:0;white-space:nowrap}
+.home-stats .stat-card strong{font-size:clamp(18px,5vw,23px);margin:6px 0 2px}
+.home-stats .stat-card small{font-size:9px;line-height:1.35}
+.home-stat-weight{background:linear-gradient(145deg,#483256,#2b2035)!important;border-color:#79568b!important}
+.goal-card,.home-next-card{position:relative;overflow:hidden;border:1px solid #654878;border-radius:21px;padding:18px;background:linear-gradient(135deg,#392747 0%,#513462 58%,#68427d 100%);box-shadow:0 12px 30px #09050f44;margin:14px 0}
+.goal-card:after{content:"";position:absolute;width:150px;height:150px;right:-80px;top:-82px;border-radius:50%;background:#e7c3f522;pointer-events:none}
+.goal-card-top,.next-card-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.goal-card .eyebrow,.home-next-card .eyebrow{margin-bottom:5px;color:#e7c8f5}
+.goal-card h2,.home-next-card h2{font-size:19px;letter-spacing:-.035em;margin:0}
+.goal-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:13px;background:#ffffff18;color:#f0dafa;font-size:23px}
+.goal-numbers{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:19px 0 13px}
+.goal-numbers div{display:grid;gap:3px}
+.goal-numbers strong{font-size:25px;letter-spacing:-.05em;color:#fff}
+.goal-numbers span{font-size:10px;color:#d8c5e2}
+.goal-target{text-align:right}
+.goal-target strong{font-size:20px;color:#e8c7f7}
+.goal-track{height:10px;border-radius:99px;background:#24192e88;overflow:hidden;border:1px solid #ffffff16}
+.goal-track div{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#bd86d7,#f0d7fb);box-shadow:0 0 12px #e0b5f366;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.goal-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}
+.goal-footer span{font-size:10px;color:#e3d2eb;line-height:1.4}
+.goal-edit{background:#ffffff18;border:1px solid #ffffff24;color:#f4e7fa;border-radius:10px;padding:8px 11px;font-size:10px;white-space:nowrap;min-height:36px}
+.home-next-card{background:linear-gradient(125deg,#2d2238,#382744);border-color:#574064;padding:18px}
+.home-next-card h2{font-size:23px;margin:10px 0 5px}
+.home-next-card .muted{font-size:12px;margin:0 0 12px;color:#cdbbd8}
+.home-next-card .primary-button{margin:12px 0 0;min-height:49px}
+.home-next-card .tag{font-size:9px}
+#view-home>.section-heading{margin-top:23px}
+#view-home .workout-list{gap:8px}
+#view-home .workout-card{padding:12px 13px}
+@media(max-width:370px){
+ .home-stats{gap:6px}
+ .home-stats .stat-card{padding:11px 8px}
+ .home-stats .stat-card span{font-size:9px}
+ .home-stats .stat-card strong{font-size:18px}
+ .goal-card,.home-next-card{padding:15px}
+ .goal-numbers strong{font-size:22px}
+ .goal-target strong{font-size:18px}
+ .goal-footer span{max-width:65%}
+}
