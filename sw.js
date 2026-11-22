@@ -1,4 +1,4 @@
-const CACHE_NAME = "fittrack-cache-v30";
+const CACHE_NAME = "fittrack-cache-v31";
 
 const APP_FILES = [
   "./",
@@ -9,6 +9,7 @@ const APP_FILES = [
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/icon.svg",
+  "./icons/apple-touch-icon.png",
   "./icons/apple-touch-icon.png",
   "./icons/mark.svg",
 
