@@ -59,33 +59,49 @@
   }
 
   async function refreshAuth() {
-    try {
-      const response = await fetch(API_BASE + "/auth/me", {
-        method: "GET",
-        credentials: "include",
-        cache: "no-store"
-      });
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), 12000);
 
-      const payload = await response.json().catch(() => ({}));
-      cloudAuthenticated = response.ok && payload.authenticated === true;
-      updatePanel();
+  try {
+    const response = await fetch(API_BASE + "/auth/me", {
+      method: "GET",
+      credentials: "include",
+      cache: "no-store",
+      signal: controller.signal
+    });
 
-      if (cloudAuthenticated) {
-        setStatus("Аккаунт подключён. Проверяем и обновляем облачные данные…");
-      } else if (response.status === 401) {
-        setStatus("Войди через Яндекс ID, чтобы включить облачное хранение.");
-      } else {
-        setStatus("Не удалось проверить вход. Проверь подключение к интернету.");
-      }
+    const payload = await response.json().catch(() => ({}));
+    cloudAuthenticated = response.ok && payload.authenticated === true;
+    updatePanel();
 
-      return cloudAuthenticated;
-    } catch (_) {
-      cloudAuthenticated = false;
-      updatePanel();
-      setStatus("API временно недоступен. Локальные данные не затронуты.");
-      return false;
+    if (cloudAuthenticated) {
+      setStatus("Аккаунт подключён. Проверяем и обновляем облачные данные…");
+    } else if (response.status === 401) {
+      setStatus("Войди через Яндекс ID, чтобы включить облачное хранение.");
+    } else {
+      setStatus("Не удалось проверить вход. Проверь подключение и попробуй ещё раз.");
     }
+
+    return cloudAuthenticated;
+  } catch (error) {
+    cloudAuthenticated = false;
+    updatePanel();
+
+    const message = error.name === "AbortError"
+      ? "Сервер не ответил за 12 секунд. Проверь интернет и попробуй ещё раз."
+      : "API временно недоступен. Локальные данные не затронуты.";
+
+    setStatus(message);
+
+    if (document.body.classList.contains("auth-required")) {
+      setGateStatus(message);
+    }
+
+    return false;
+  } finally {
+    window.clearTimeout(timeoutId);
   }
+}
 
   function normalizeState(source) {
     const defaults = blankState();
@@ -354,36 +370,65 @@
   }
 
   async function verifyAndEnter() {
-    if (authCheckBusy) return;
-    authCheckBusy = true;
+  if (authCheckBusy) return;
+
+  authCheckBusy = true;
+  const retryButton = byId("authGateRetry");
+
+  try {
     showAuthGate("Проверяем авторизацию через Яндекс ID…");
 
+    if (retryButton) retryButton.disabled = true;
+
     const authenticated = await refreshAuth();
+
     if (!authenticated) {
       const panelStatus = byId("cloudSyncStatus");
-      setGateStatus(panelStatus && panelStatus.textContent
-        ? panelStatus.textContent
-        : "Для продолжения работы войди через Яндекс ID.");
-      authCheckBusy = false;
+
+      setGateStatus(
+        panelStatus && panelStatus.textContent
+          ? panelStatus.textContent
+          : "Для продолжения работы войди через Яндекс ID."
+      );
+
       return;
     }
 
     setGateStatus("Вход подтверждён. Загружаем и объединяем данные с облаком…");
-    const synced = await syncNow({ automatic: true, initial: true });
+
+    const synced = await syncNow({
+      automatic: true,
+      initial: true
+    });
 
     if (!cloudAuthenticated) {
       showAuthGate("Сессия не подтверждена. Войди через Яндекс ID ещё раз.");
-      authCheckBusy = false;
       return;
     }
 
     unlockApp();
+
     if (!synced) {
-      setStatus("Вход выполнен. Облачная синхронизация временно недоступна; локальные данные сохранены. Повторим её автоматически.");
+      setStatus(
+        "Вход выполнен. Облачная синхронизация временно недоступна; локальные данные сохранены. Повторим её автоматически."
+      );
+
       showToast("Вход выполнен. Облако пока недоступно.");
     }
+
+  } catch (error) {
+    showAuthGate(
+      error.message || "Не удалось проверить авторизацию. Попробуй ещё раз."
+    );
+
+  } finally {
     authCheckBusy = false;
+
+    if (retryButton) {
+      retryButton.disabled = false;
+    }
   }
+}
 
   function handleOAuthReturn() {
     const params = new URLSearchParams(window.location.search);
@@ -439,6 +484,27 @@
       }
     });
 
+window.addEventListener("pageshow", (event) => {
+  if (!event.persisted) return;
+
+  const loginButton = byId("authGateLogin");
+  const retryButton = byId("authGateRetry");
+
+  if (loginButton) {
+    loginButton.disabled = false;
+    loginButton.textContent = "Войти через Яндекс ID";
+  }
+
+  if (retryButton) {
+    retryButton.disabled = false;
+  }
+
+  if (document.body.classList.contains("auth-required")) {
+    authCheckBusy = false;
+    verifyAndEnter();
+  }
+});
+    
     handleOAuthReturn();
     verifyAndEnter();
   }
