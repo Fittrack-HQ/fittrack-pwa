@@ -93,7 +93,13 @@
 <nav class="bottom-nav"><button class="tab active" data-nav="home"><span>⌂</span>Главная</button><button class="tab" data-nav="workout"><span>↗</span>Тренировка</button><button class="tab" data-nav="history"><span>◷</span>История</button><button class="tab" data-nav="progress"><span>⌁</span>Прогресс</button><button class="tab" data-nav="profile"><span>☻</span>Профиль</button></nav>
 <dialog id="exerciseDialog"><div class="dialog-head"><h2 id="dialogExerciseTitle">Техника</h2><button id="closeExerciseDialog" class="icon-button">✕</button></div><div id="dialogExerciseBody"></div></dialog>
 <dialog id="timerDialog"><div class="dialog-head"><h2>Отдых между подходами</h2><button id="closeTimer" class="icon-button">✕</button></div><div id="timerDisplay" class="timer-display">01:30</div><div class="timer-presets"><button data-seconds="45">45 сек</button><button data-seconds="60">60 сек</button><button data-seconds="75">75 сек</button><button data-seconds="90" class="active">90 сек</button><button data-seconds="120">120 сек</button></div><div class="timer-custom"><label for="timerCustom">Свой интервал, секунд</label><div class="form-row"><input id="timerCustom" type="number" min="15" max="600" step="5" value="90"><button id="timerCustomApply" class="secondary-button">Применить</button></div><label><input id="timerSound" type="checkbox"> Звуковой сигнал</label><label><input id="timerVibration" type="checkbox"> Вибрация</label></div><div class="button-row"><button id="timerStartPause" class="primary-button">Старт</button><button id="timerReset" class="secondary-button">Сброс</button></div></dialog>
-<dialog id="installDialog"><div class="dialog-head"><h2>Установка FitTrack</h2><button id="closeInstall" class="icon-button">✕</button></div><p>В Safari открой меню «Поделиться», выбери «На экран Домой», затем нажми «Добавить».</p></dialog>
+<dialog id="installDialog">
+  <div class="dialog-head">
+    <h2>Установка FitTrack</h2>
+    <button id="closeInstall" class="icon-button">✕</button>
+  </div>
+  <p id="installDialogText">В Safari открой меню «Поделиться», выбери «На экран Домой», затем нажми «Добавить».</p>
+</dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="./app.js"></script>
 <script src="./cloud-sync.js?v=45"></script>
