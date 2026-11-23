@@ -270,3 +270,24 @@ dialog{box-shadow:0 24px 70px #0008}
   max-height: 170px;
   object-fit: contain;
 }
+/* FitTrack cloud synchronization */
+.cloud-sync-panel {
+  margin-top: 14px;
+}
+
+.cloud-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 9px;
+  margin-top: 12px;
+}
+
+.cloud-actions button {
+  width: 100%;
+}
+
+.cloud-sync-panel #cloudSyncStatus {
+  margin-top: 12px;
+  min-height: 1.2em;
+  line-height: 1.45;
+}
