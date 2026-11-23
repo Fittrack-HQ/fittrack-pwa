@@ -85,6 +85,9 @@
     if (error && error.name === "AbortError") {
       return "Сервер не ответил за 15 секунд. Проверь интернет и нажми «Проверить ещё раз».";
     }
+    if (error instanceof TypeError) {
+      return "Браузер не смог выполнить запрос из FitTrack к API. Возможна проблема CORS или передачи cookie. Локальные данные сохранены.";
+    }
     return (error && error.message) || fallback;
   }
 
@@ -101,7 +104,7 @@
           ok: true,
           authenticated: false,
           unauthorized: true,
-          message: "Сессия не найдена. Войди через Яндекс ID."
+          message: "Приложение получило HTTP 401 от /auth/me: сессионная cookie не пришла в запрос из FitTrack. Проверь вход и настройки доступа браузера."
         };
       }
 
@@ -546,16 +549,37 @@
     const retryButton = byId("authGateRetry");
     const syncButton = byId("cloudSync");
     const logoutButton = byId("cloudLogout");
+    const gate = byId("authGate");
 
-    if (!loginLink || !retryButton || !syncButton || !logoutButton) {
-      showAuthGate("Не удалось загрузить элементы авторизации. Обнови страницу.");
-      return;
+    // The login anchor and gate are the only UI elements needed for authentication.
+    // Profile controls are optional: their absence must never block sign-in.
+    if (loginLink && !loginLink.getAttribute("href")) {
+      loginLink.href = API_BASE + "/oauth/login";
     }
 
-    // Login is a native anchor with href; navigation does not depend on JavaScript.
-    retryButton.addEventListener("click", verifyAndEnter);
-    syncButton.addEventListener("click", () => syncNow({ automatic: false }));
-    logoutButton.addEventListener("click", logout);
+    if (retryButton) {
+      retryButton.addEventListener("click", verifyAndEnter);
+    }
+
+    if (syncButton) {
+      syncButton.addEventListener("click", () => syncNow({ automatic: false }));
+    }
+
+    if (logoutButton) {
+      logoutButton.addEventListener("click", logout);
+    }
+
+    // If optional profile controls are missing, report this without blocking auth.
+    const missingOptional = [];
+    if (!syncButton) missingOptional.push("cloudSync");
+    if (!logoutButton) missingOptional.push("cloudLogout");
+    if (missingOptional.length) {
+      setStatus("Вход доступен. Не найдены дополнительные элементы профиля: " + missingOptional.join(", ") + ".");
+    }
+
+    if (!gate) {
+      console.error("FitTrack: #authGate was not found; authentication will still be checked.");
+    }
 
     window.addEventListener("fittrack:state-saved", scheduleSync);
 
