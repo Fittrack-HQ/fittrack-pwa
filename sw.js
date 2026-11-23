@@ -1,10 +1,11 @@
-const CACHE_NAME = "fittrack-cache-v33";
+const CACHE_NAME = "fittrack-cache-v34";
 
 const APP_FILES = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
+  "./cloud-sync.js",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
