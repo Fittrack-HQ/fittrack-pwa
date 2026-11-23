@@ -425,6 +425,57 @@ function setTimer(s){timerSeconds=s;timerRemaining=s;stopTimer();if(timerExercis
 function exportBackup(){const payload={app:"FitTrack",version:2,exportedAt:new Date().toISOString(),data:{sessions:state.sessions,deletedSessions:state.deletedSessions||[],bodyWeights:state.bodyWeights,draft:state.draft,settings:state.settings}},blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`fittrack-backup-${todayISO()}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);state.settings.lastBackupAt=Date.now();saveState();$("#backupStatus").textContent=`Последняя копия: ${new Date().toLocaleDateString("ru-RU")}`;showToast("Резервная копия подготовлена")}
 async function importBackup(file){try{const p=JSON.parse(await file.text()),d=p.data||p;if(!Array.isArray(d.sessions)||!Array.isArray(d.bodyWeights))throw Error();if(!confirm("Импорт заменит текущую историю данными из файла. Продолжить?"))return;const previousState=state;state={...blankState(),...d,settings:{...blankState().settings,...(d.settings||{}),restByExercise:{...(d.settings?.restByExercise||{})}}};if(!saveState()){state=previousState;showToast("Не удалось импортировать данные: хранилище недоступно");return}renderHome();renderHistory();renderProgress();showToast("Резервная копия импортирована")}catch{showToast("Не удалось импортировать: проверь файл")}}
 function clearAll(){if(!confirm("Удалить все тренировки, измерения веса и незавершённую тренировку? Это нельзя отменить."))return;const previousState=state,previousSession=activeSession,previousWorkoutId=activeWorkoutId;state=blankState();if(!saveState()){state=previousState;activeSession=previousSession;activeWorkoutId=previousWorkoutId;showToast("Не удалось удалить данные: хранилище недоступно");return}activeSession=null;activeWorkoutId=null;renderHome();renderHistory();renderProgress();showToast("Локальные данные удалены")}
-function openInstallGuide(){$("#installDialog").showModal()}
-function init(){document.addEventListener("click",e=>{const b=e.target.closest("[data-delete-session]");if(b)deleteSession(b.dataset.deleteSession)});renderHome();renderHistory();renderProgress();$$("[data-nav]").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.nav;if(v==="workout"&&!activeSession){showToast("Сначала выбери тренировку");navigate("home")}else navigate(v)}));$("#startNext").onclick=()=>startWorkout(nextWorkout().id);$("#finishWorkout").onclick=finishWorkout;$("#bodyWeightForm").onsubmit=e=>{e.preventDefault();addBodyWeight($("#bodyWeightInput").value)};$("#weightGoalInput").value=state.settings.weightGoal||"";$("#weightGoalForm").onsubmit=e=>{e.preventDefault();const v=$("#weightGoalInput").value.trim(),n=Number(v);if(!v||!Number.isFinite(n)||n<20||n>350){showToast("Введи целевой вес от 20 до 350 кг");return}const old=state.settings.weightGoal;state.settings.weightGoal=n;if(!saveState()){state.settings.weightGoal=old;return}$("#weightGoalStatus").textContent=`Цель сохранена: ${n.toLocaleString("ru-RU",{maximumFractionDigits:1})} кг`;renderHome();renderProgress();showToast("Цель по весу сохранена")};$("#exerciseHistorySelect").onchange=renderExerciseChart;$$("[data-history-tab]").forEach(b=>b.onclick=()=>{$$("[data-history-tab]").forEach(x=>x.classList.toggle("active",x===b));$("#historySessions").classList.toggle("hidden",b.dataset.historyTab!=="sessions");$("#historyWeights").classList.toggle("hidden",b.dataset.historyTab!=="weights");$("#historyCalendar").classList.toggle("hidden",b.dataset.historyTab!=="calendar")});$("#closeExerciseDialog").onclick=()=>$("#exerciseDialog").close();$("#closeTimer").onclick=()=>{stopTimer();$("#timerDialog").close()};$("#closeInstall").onclick=()=>$("#installDialog").close();$("#installHelp").onclick=openInstallGuide;$("#showInstallGuide").onclick=openInstallGuide;$("#timerStartPause").onclick=toggleTimer;$("#timerReset").onclick=()=>setTimer(timerSeconds);$$("[data-seconds]").forEach(b=>b.onclick=()=>setTimer(+b.dataset.seconds));$("#exportData").onclick=exportBackup;$("#importData").onchange=e=>{if(e.target.files[0])importBackup(e.target.files[0]);e.target.value=""};$("#clearData").onclick=clearAll;$("#timerCustomApply").onclick=()=>setTimer(Math.max(15,Math.min(600,Number($("#timerCustom").value)||90)));$("#timerSound").onchange=e=>{state.settings.timerSound=e.target.checked;saveState()};$("#timerVibration").onchange=e=>{state.settings.timerVibration=e.target.checked;saveState()};$("#backupReminderDays").onchange=e=>{state.settings.backupReminderDays=Number(e.target.value);saveState()};$("#timerSound").checked=state.settings.timerSound;$("#timerVibration").checked=state.settings.timerVibration;$("#backupReminderDays").value=String(state.settings.backupReminderDays);$("#backupStatus").textContent=state.settings.lastBackupAt?`Последняя копия: ${new Date(state.settings.lastBackupAt).toLocaleDateString("ru-RU")}`:"Резервная копия ещё не создавалась";checkBackupReminder();if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).then(reg=>{reg.update().catch(()=>{});document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")reg.update().catch(()=>{})})}).catch(()=>{})}
+let deferredInstallPrompt=null;
+
+function isFitTrackInstalled(){
+  return window.matchMedia("(display-mode: standalone)").matches || navigator.standalone===true;
+}
+
+function openInstallGuide(){
+  const message=$("#installDialogText");
+  if(message){
+    const ua=navigator.userAgent.toLowerCase();
+    if(/iphone|ipad|ipod/.test(ua)){
+      message.textContent="На iPhone открой Safari, нажми «Поделиться», выбери «На экран Домой», затем нажми «Добавить».";
+    }else if(/android/.test(ua)){
+      message.textContent="Открой меню браузера ⋮ и выбери «Установить приложение» или «Добавить на главный экран». Название пункта зависит от браузера.";
+    }else{
+      message.textContent="Открой меню браузера и найди пункт «Установить FitTrack» или «Установить приложение».";
+    }
+  }
+  $("#installDialog").showModal();
+}
+
+async function handleInstallButton(){
+  if(isFitTrackInstalled()){
+    showToast("FitTrack уже установлен");
+    return;
+  }
+
+  if(deferredInstallPrompt){
+    const promptEvent=deferredInstallPrompt;
+    deferredInstallPrompt=null;
+    try{
+      await promptEvent.prompt();
+      const choice=await promptEvent.userChoice;
+      if(choice.outcome==="accepted")showToast("FitTrack устанавливается");
+    }catch{
+      openInstallGuide();
+    }
+    return;
+  }
+
+  openInstallGuide();
+}
+
+window.addEventListener("beforeinstallprompt",event=>{
+  event.preventDefault();
+  deferredInstallPrompt=event;
+});
+
+window.addEventListener("appinstalled",()=>{
+  deferredInstallPrompt=null;
+  showToast("FitTrack установлен");
+});
+function init(){document.addEventListener("click",e=>{const b=e.target.closest("[data-delete-session]");if(b)deleteSession(b.dataset.deleteSession)});renderHome();renderHistory();renderProgress();$$("[data-nav]").forEach(b=>b.addEventListener("click",()=>{const v=b.dataset.nav;if(v==="workout"&&!activeSession){showToast("Сначала выбери тренировку");navigate("home")}else navigate(v)}));$("#startNext").onclick=()=>startWorkout(nextWorkout().id);$("#finishWorkout").onclick=finishWorkout;$("#bodyWeightForm").onsubmit=e=>{e.preventDefault();addBodyWeight($("#bodyWeightInput").value)};$("#weightGoalInput").value=state.settings.weightGoal||"";$("#weightGoalForm").onsubmit=e=>{e.preventDefault();const v=$("#weightGoalInput").value.trim(),n=Number(v);if(!v||!Number.isFinite(n)||n<20||n>350){showToast("Введи целевой вес от 20 до 350 кг");return}const old=state.settings.weightGoal;state.settings.weightGoal=n;if(!saveState()){state.settings.weightGoal=old;return}$("#weightGoalStatus").textContent=`Цель сохранена: ${n.toLocaleString("ru-RU",{maximumFractionDigits:1})} кг`;renderHome();renderProgress();showToast("Цель по весу сохранена")};$("#exerciseHistorySelect").onchange=renderExerciseChart;$$("[data-history-tab]").forEach(b=>b.onclick=()=>{$$("[data-history-tab]").forEach(x=>x.classList.toggle("active",x===b));$("#historySessions").classList.toggle("hidden",b.dataset.historyTab!=="sessions");$("#historyWeights").classList.toggle("hidden",b.dataset.historyTab!=="weights");$("#historyCalendar").classList.toggle("hidden",b.dataset.historyTab!=="calendar")});$("#closeExerciseDialog").onclick=()=>$("#exerciseDialog").close();$("#closeTimer").onclick=()=>{stopTimer();$("#timerDialog").close()};$("#closeInstall").onclick=()=>$("#installDialog").close();$("#installHelp").onclick=handleInstallButton;$("#showInstallGuide").onclick=openInstallGuide;$("#timerStartPause").onclick=toggleTimer;$("#timerReset").onclick=()=>setTimer(timerSeconds);$$("[data-seconds]").forEach(b=>b.onclick=()=>setTimer(+b.dataset.seconds));$("#exportData").onclick=exportBackup;$("#importData").onchange=e=>{if(e.target.files[0])importBackup(e.target.files[0]);e.target.value=""};$("#clearData").onclick=clearAll;$("#timerCustomApply").onclick=()=>setTimer(Math.max(15,Math.min(600,Number($("#timerCustom").value)||90)));$("#timerSound").onchange=e=>{state.settings.timerSound=e.target.checked;saveState()};$("#timerVibration").onchange=e=>{state.settings.timerVibration=e.target.checked;saveState()};$("#backupReminderDays").onchange=e=>{state.settings.backupReminderDays=Number(e.target.value);saveState()};$("#timerSound").checked=state.settings.timerSound;$("#timerVibration").checked=state.settings.timerVibration;$("#backupReminderDays").value=String(state.settings.backupReminderDays);$("#backupStatus").textContent=state.settings.lastBackupAt?`Последняя копия: ${new Date(state.settings.lastBackupAt).toLocaleDateString("ru-RU")}`:"Резервная копия ещё не создавалась";checkBackupReminder();if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).then(reg=>{reg.update().catch(()=>{});document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="visible")reg.update().catch(()=>{})})}).catch(()=>{})}
 init();
