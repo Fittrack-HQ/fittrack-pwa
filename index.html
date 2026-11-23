@@ -13,7 +13,18 @@
 <link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-touch-icon-v2.png">
 <link rel="stylesheet" href="./styles.css">
 </head>
-<body>
+<body class="auth-required">
+<section id="authGate" class="auth-gate" aria-labelledby="authGateTitle">
+  <div class="auth-gate-card">
+    <div class="auth-gate-logo"><img src="./icons/mark.svg" alt=""></div>
+    <p class="eyebrow">ЛИЧНЫЙ ТРЕКЕР</p>
+    <h1 id="authGateTitle">Добро пожаловать в FitTrack</h1>
+    <p>Войди через Яндекс ID, чтобы открыть приложение и получить свои данные из облака.</p>
+    <p id="authGateStatus" class="auth-gate-status" aria-live="polite">Проверяем авторизацию…</p>
+    <button id="authGateLogin" class="primary-button" type="button">Войти через Яндекс ID</button>
+    <button id="authGateRetry" class="secondary-button" type="button">Проверить ещё раз</button>
+  </div>
+</section>
 <header class="topbar"><div class="brand-mark"><img src="./icons/mark.svg" alt=""></div><div><strong>FitTrack</strong><small>Тренировки и прогресс</small></div><button id="installHelp" class="icon-button" aria-label="Установка">＋</button></header>
 <main>
 <section id="view-home" class="view active">
@@ -57,9 +68,7 @@
 <div class="panel cloud-sync-panel">
   <h2>Облачная синхронизация</h2>
   <p id="cloudAuthStatus" class="muted">Проверяем авторизацию…</p>
-  <div class="cloud-actions">
-    <button id="cloudLogin" class="primary-button" type="button">
-      Войти через Яндекс ID
+  <div class="cloud-actions
     </button>
     <button id="cloudSync" class="secondary-button hidden" type="button">
       Синхронизировать сейчас
