@@ -21,7 +21,12 @@
     <h1 id="authGateTitle">Добро пожаловать в FitTrack</h1>
     <p>Войди через Яндекс ID, чтобы открыть приложение и получить свои данные из облака.</p>
     <p id="authGateStatus" class="auth-gate-status" aria-live="polite">Проверяем авторизацию…</p>
-    <button id="authGateLogin" class="primary-button" type="button">Войти через Яндекс ID</button>
+    <a
+  id="authGateLogin"
+  class="primary-button"
+  href="https://api.fittrack-app.ru/oauth/login"
+  style="text-decoration:none"
+>Войти через Яндекс ID</a>
     <button id="authGateRetry" class="secondary-button" type="button">Проверить ещё раз</button>
   </div>
 </section>
@@ -92,5 +97,5 @@
 <dialog id="installDialog"><div class="dialog-head"><h2>Установка FitTrack</h2><button id="closeInstall" class="icon-button">✕</button></div><p>В Safari открой меню «Поделиться», выбери «На экран Домой», затем нажми «Добавить».</p></dialog>
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="./app.js"></script>
-<script src="./cloud-sync.js"></script>
+<script src="./cloud-sync.js?v=41"></script>
 </body></html>
