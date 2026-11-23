@@ -205,18 +205,23 @@
       saveState();
     }
 
-    // Before the first cloud merge on this browser, download a local backup.
-    if (!localStorage.getItem(CLOUD_BACKUP_KEY)) {
-      exportBackup();
-      const backupConfirmed = confirm(
-        "Перед первой синхронизацией FitTrack скачал резервную копию JSON. " +
-        "Убедись, что файл появился в загрузках. Продолжить синхронизацию?"
-      );
+    // Confirm the backup separately before starting network sync.
+if (!localStorage.getItem(CLOUD_BACKUP_KEY)) {
+  const backupConfirmed = confirm(
+    "Ты уже сохранил резервную копию FitTrack JSON в приложении «Файлы» на этом устройстве? " +
+    "Нажми OK, если файл сохранён. Если нет — нажми «Отмена» и сначала экспортируй данные."
+  );
 
-      if (!backupConfirmed) {
-        setStatus("Синхронизация отменена. Резервная копия остаётся у тебя.");
-        return;
-      }
+  if (!backupConfirmed) {
+    setStatus("Сначала сохрани резервную копию через «Экспортировать данные».");
+    return;
+  }
+
+  localStorage.setItem(CLOUD_BACKUP_KEY, "done");
+  setStatus("Резервная копия подтверждена. Нажми «Синхронизировать сейчас» ещё раз.");
+  showToast("Резервная копия подтверждена");
+  return;
+}
     }
 
     cloudSyncBusy = true;
