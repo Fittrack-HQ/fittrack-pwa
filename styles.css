@@ -291,3 +291,75 @@ dialog{box-shadow:0 24px 70px #0008}
   min-height: 1.2em;
   line-height: 1.45;
 }
+/* FitTrack: require Yandex ID before showing the app */
+body.auth-required {
+  padding-bottom: 0;
+}
+
+body.auth-required > :not(#authGate):not(script) {
+  display: none !important;
+}
+
+.auth-gate {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px 18px calc(24px + env(safe-area-inset-bottom));
+  background: radial-gradient(ellipse at 50% 0%, #493052 0%, #211a2a 42%, var(--bg) 78%);
+}
+
+.auth-gate.hidden {
+  display: none !important;
+}
+
+.auth-gate-card {
+  width: min(100%, 420px);
+  padding: 28px 22px 22px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--panel);
+  box-shadow: 0 20px 70px #0006;
+  text-align: center;
+}
+
+.auth-gate-logo {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 18px;
+  border-radius: 18px;
+  background: var(--accent);
+}
+
+.auth-gate-logo img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+}
+
+.auth-gate-card h1 {
+  margin: 0 0 10px;
+  font-size: 27px;
+  letter-spacing: -.04em;
+}
+
+.auth-gate-card p {
+  margin: 0 0 16px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.auth-gate-card .primary-button,
+.auth-gate-card .secondary-button {
+  width: 100%;
+  min-height: 48px;
+  margin: 10px 0 0;
+}
+
+.auth-gate-status {
+  min-height: 42px;
+  overflow-wrap: anywhere;
+}
