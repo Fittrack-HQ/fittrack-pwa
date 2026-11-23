@@ -151,6 +151,7 @@
       ...defaults,
       ...value,
       sessions: Array.isArray(value.sessions) ? value.sessions : [],
+      deletedSessions: Array.isArray(value.deletedSessions) ? value.deletedSessions : [],
       bodyWeights: Array.isArray(value.bodyWeights) ? value.bodyWeights : [],
       draft: value.draft && typeof value.draft === "object" ? value.draft : null,
       settings: {
@@ -229,8 +230,17 @@
         : remote.draft;
     }
 
+    const deletedSessions = [...new Set([
+      ...remote.deletedSessions,
+      ...local.deletedSessions
+    ].map(String))];
+
+    const deletedIds = new Set(deletedSessions);
+
     return {
-      sessions: mergeRecords(remote.sessions, local.sessions),
+      sessions: mergeRecords(remote.sessions, local.sessions)
+        .filter(session => !deletedIds.has(String(session.id))),
+      deletedSessions,
       bodyWeights: mergeRecords(remote.bodyWeights, local.bodyWeights),
       draft,
       settings
