@@ -9,6 +9,7 @@
   let syncAgain = false;
   let applyingCloudState = false;
   let syncTimer = null;
+  let authCheckBusy = false;
 
   const byId = (id) => document.getElementById(id);
 
@@ -17,21 +18,44 @@
     if (element) element.textContent = message;
   }
 
+  function setGateStatus(message) {
+    const element = byId("authGateStatus");
+    if (element) element.textContent = message;
+  }
+
+  function showAuthGate(message) {
+    document.body.classList.add("auth-required");
+    const gate = byId("authGate");
+    if (gate) gate.classList.remove("hidden");
+    const loginButton = byId("authGateLogin");
+    if (loginButton) {
+      loginButton.disabled = false;
+      loginButton.textContent = "Войти через Яндекс ID";
+    }
+    const retryButton = byId("authGateRetry");
+    if (retryButton) retryButton.classList.remove("hidden");
+    if (message) setGateStatus(message);
+  }
+
+  function unlockApp() {
+    document.body.classList.remove("auth-required");
+    const gate = byId("authGate");
+    if (gate) gate.classList.add("hidden");
+  }
+
   function updatePanel() {
-    const login = byId("cloudLogin");
     const sync = byId("cloudSync");
     const logout = byId("cloudLogout");
     const authStatus = byId("cloudAuthStatus");
 
-    if (!login || !sync || !logout || !authStatus) return;
+    if (sync) sync.classList.toggle("hidden", !cloudAuthenticated);
+    if (logout) logout.classList.toggle("hidden", !cloudAuthenticated);
 
-    login.classList.toggle("hidden", cloudAuthenticated);
-    sync.classList.toggle("hidden", !cloudAuthenticated);
-    logout.classList.toggle("hidden", !cloudAuthenticated);
-
-    authStatus.textContent = cloudAuthenticated
-      ? "Вход через Яндекс ID выполнен. Данные FitTrack синхронизируются с облаком автоматически."
-      : "Вход не выполнен. Локальные данные продолжают храниться на этом устройстве.";
+    if (authStatus) {
+      authStatus.textContent = cloudAuthenticated
+        ? "Вход через Яндекс ID выполнен. Данные FitTrack синхронизируются с облаком автоматически."
+        : "Нет активной сессии. Для входа используй экран авторизации.";
+    }
   }
 
   async function refreshAuth() {
@@ -157,6 +181,12 @@
   }
 
   async function login() {
+    const button = byId("authGateLogin");
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Переходим к Яндекс ID…";
+    }
+    setGateStatus("Сейчас откроется страница входа Яндекс ID…");
     window.location.assign(API_BASE + "/oauth/login");
   }
 
@@ -180,8 +210,9 @@
 
       cloudAuthenticated = false;
       updatePanel();
+      clearTimeout(syncTimer);
       setStatus("Вы вышли из аккаунта. Локальные и облачные данные сохранены.");
-      showToast("Выход выполнен");
+      showAuthGate("Вы вышли из FitTrack. Чтобы продолжить работу, войди через Яндекс ID.");
     } catch (error) {
       setStatus(error.message || "Не удалось выполнить выход.");
     } finally {
@@ -202,14 +233,15 @@
   async function syncNow(options = {}) {
     if (cloudSyncBusy) {
       syncAgain = true;
-      return;
+      return false;
     }
 
     if (!cloudAuthenticated && !(await refreshAuth())) {
       if (!options.automatic) showToast("Сначала войди через Яндекс ID");
-      return;
+      return false;
     }
 
+    let syncSucceeded = false;
     cloudSyncBusy = true;
     const button = byId("cloudSync");
     if (button) {
@@ -236,6 +268,7 @@
       if (getResponse.status === 401) {
         cloudAuthenticated = false;
         updatePanel();
+        showAuthGate("Сессия завершилась. Для продолжения снова войди через Яндекс ID.");
         throw new Error("Сессия не найдена. Войди через Яндекс ID ещё раз.");
       }
       if (!getResponse.ok) {
@@ -268,6 +301,7 @@
       if (putResponse.status === 401) {
         cloudAuthenticated = false;
         updatePanel();
+        showAuthGate("Сессия завершилась. Для продолжения снова войди через Яндекс ID.");
         throw new Error("Сессия не найдена. Войди через Яндекс ID ещё раз.");
       }
       if (!putResponse.ok) {
@@ -298,6 +332,7 @@
         "Синхронизация завершена. Тренировок: " + mergedState.sessions.length +
         ", измерений веса: " + mergedState.bodyWeights.length + "."
       );
+      syncSucceeded = true;
       if (!options.automatic) showToast("Данные FitTrack синхронизированы");
     } catch (error) {
       applyingCloudState = false;
@@ -314,6 +349,40 @@
         scheduleSync();
       }
     }
+
+    return syncSucceeded;
+  }
+
+  async function verifyAndEnter() {
+    if (authCheckBusy) return;
+    authCheckBusy = true;
+    showAuthGate("Проверяем авторизацию через Яндекс ID…");
+
+    const authenticated = await refreshAuth();
+    if (!authenticated) {
+      const panelStatus = byId("cloudSyncStatus");
+      setGateStatus(panelStatus && panelStatus.textContent
+        ? panelStatus.textContent
+        : "Для продолжения работы войди через Яндекс ID.");
+      authCheckBusy = false;
+      return;
+    }
+
+    setGateStatus("Вход подтверждён. Загружаем и объединяем данные с облаком…");
+    const synced = await syncNow({ automatic: true, initial: true });
+
+    if (!cloudAuthenticated) {
+      showAuthGate("Сессия не подтверждена. Войди через Яндекс ID ещё раз.");
+      authCheckBusy = false;
+      return;
+    }
+
+    unlockApp();
+    if (!synced) {
+      setStatus("Вход выполнен. Облачная синхронизация временно недоступна; локальные данные сохранены. Повторим её автоматически.");
+      showToast("Вход выполнен. Облако пока недоступно.");
+    }
+    authCheckBusy = false;
   }
 
   function handleOAuthReturn() {
@@ -322,7 +391,7 @@
     const error = params.get("auth_error");
 
     if (success) {
-      showToast("Вход через Яндекс выполнен. Подключаем облако…");
+      setGateStatus("Вход через Яндекс выполнен. Проверяем аккаунт и загружаем данные…");
     } else if (error) {
       const messages = {
         access_denied: "Вход через Яндекс отменён.",
@@ -335,7 +404,7 @@
         session_query_error: "Ошибка запроса к базе данных.",
         session_db_connection_error: "Не удалось подключиться к базе данных."
       };
-      showToast(messages[error] || "Не удалось выполнить вход через Яндекс.");
+      setGateStatus(messages[error] || "Не удалось выполнить вход через Яндекс. Попробуй ещё раз.");
     }
 
     if (success || error) {
@@ -344,12 +413,14 @@
   }
 
   function initCloudSync() {
-    const loginButton = byId("cloudLogin");
+    const loginButton = byId("authGateLogin");
+    const retryButton = byId("authGateRetry");
     const syncButton = byId("cloudSync");
     const logoutButton = byId("cloudLogout");
-    if (!loginButton || !syncButton || !logoutButton) return;
+    if (!loginButton || !retryButton || !syncButton || !logoutButton) return;
 
     loginButton.addEventListener("click", login);
+    retryButton.addEventListener("click", verifyAndEnter);
     syncButton.addEventListener("click", () => syncNow({ automatic: false }));
     logoutButton.addEventListener("click", logout);
 
@@ -357,16 +428,19 @@
     window.addEventListener("fittrack:state-saved", scheduleSync);
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "visible") {
-        refreshAuth().then((authenticated) => {
-          if (authenticated) syncNow({ automatic: true });
-        });
+        if (document.body.classList.contains("auth-required")) {
+          verifyAndEnter();
+        } else {
+          refreshAuth().then((authenticated) => {
+            if (authenticated) syncNow({ automatic: true });
+            else showAuthGate("Сессия завершилась. Для продолжения снова войди через Яндекс ID.");
+          });
+        }
       }
     });
 
     handleOAuthReturn();
-    refreshAuth().then((authenticated) => {
-      if (authenticated) syncNow({ automatic: true });
-    });
+    verifyAndEnter();
   }
 
   // app.js must be loaded immediately before this file.
