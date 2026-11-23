@@ -10,7 +10,7 @@ const workouts = [
       {
         "id": "chest-press",
         "name": "Жим от груди в тренажёре",
-        "sets": 3,const blankState=()=>({sessions:[],deletedSessions:[],bodyWeights:[],draft:null,settings:{restByExercise:{},timerSound:true,timerVibration:true,backupReminderDays:30,lastBackupAt:null,weightGoal:null}});
+        "sets": 3,
         "reps": "8–12",
         "rest": 120,
         "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0577-T0yTjgW.gif",
@@ -384,7 +384,7 @@ const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
 const fmtDate=v=>new Date(v+"T12:00:00").toLocaleDateString("ru-RU",{day:"numeric",month:"short",year:"numeric"});
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const blankState=()=>({sessions:[],bodyWeights:[],draft:null,settings:{restByExercise:{},timerSound:true,timerVibration:true,backupReminderDays:30,lastBackupAt:null,weightGoal:null}});
+const blankState=()=>({sessions:[],deletedSessions:[],bodyWeights:[],draft:null,settings:{restByExercise:{},timerSound:true,timerVibration:true,backupReminderDays:30,lastBackupAt:null,weightGoal:null}});
 function loadState(){try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY));if(!s||!Array.isArray(s.sessions))return blankState();return {...blankState(),...s,deletedSessions:Array.isArray(s.deletedSessions)?s.deletedSessions:[],settings:{...blankState().settings,...(s.settings||{}),restByExercise:{...(s.settings?.restByExercise||{})}}}}catch{return blankState()}}
 let state=loadState(),activeWorkoutId=null,activeSession=null,timerSeconds=90,timerRemaining=90,timerInterval=null,timerRunning=false,timerExerciseId=null,toastTimeout=null,calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1),selectedCalendarDate=todayISO();
 function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));window.dispatchEvent(new Event("fittrack:state-saved"));return true}catch{showToast("Не удалось сохранить данные.");return false}}
