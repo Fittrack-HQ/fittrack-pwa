@@ -387,7 +387,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const blankState=()=>({sessions:[],bodyWeights:[],draft:null,settings:{restByExercise:{},timerSound:true,timerVibration:true,backupReminderDays:30,lastBackupAt:null,weightGoal:null}});
 function loadState(){try{const s=JSON.parse(localStorage.getItem(STORAGE_KEY));if(!s||!Array.isArray(s.sessions))return blankState();return {...blankState(),...s,settings:{...blankState().settings,...(s.settings||{}),restByExercise:{...(s.settings?.restByExercise||{})}}}}catch{return blankState()}}
 let state=loadState(),activeWorkoutId=null,activeSession=null,timerSeconds=90,timerRemaining=90,timerInterval=null,timerRunning=false,timerExerciseId=null,toastTimeout=null,calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1),selectedCalendarDate=todayISO();
-function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));return true}catch{showToast("Не удалось сохранить данные.");return false}}
+function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));window.dispatchEvent(new Event("fittrack:state-saved"));return true}catch{showToast("Не удалось сохранить данные.");return false}}
 function showToast(m){const e=$("#toast");e.textContent=m;e.classList.add("show");clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>e.classList.remove("show"),2400)}
 function getWorkout(id){return workouts.find(w=>w.id===id)||workouts[0]}
 function allExercises(){const m=new Map();workouts.forEach(w=>w.exercises.forEach(e=>{if(!m.has(e.id))m.set(e.id,e)}));return [...m.values()]}
