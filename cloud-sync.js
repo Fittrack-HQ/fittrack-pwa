@@ -2,10 +2,13 @@
   "use strict";
 
   const API_BASE = "https://api.fittrack-app.ru";
-  const CLOUD_BACKUP_KEY = "fittrack-cloud-first-sync-backup-v1";
+  const SYNC_DEBOUNCE_MS = 1200;
 
   let cloudAuthenticated = false;
   let cloudSyncBusy = false;
+  let syncAgain = false;
+  let applyingCloudState = false;
+  let syncTimer = null;
 
   const byId = (id) => document.getElementById(id);
 
@@ -27,8 +30,8 @@
     logout.classList.toggle("hidden", !cloudAuthenticated);
 
     authStatus.textContent = cloudAuthenticated
-      ? "Вход через Яндекс ID выполнен. Эта учётная запись используется для облачных данных."
-      : "Вход не выполнен. Локальные тренировки продолжают храниться на этом устройстве.";
+      ? "Вход через Яндекс ID выполнен. Данные FitTrack синхронизируются с облаком автоматически."
+      : "Вход не выполнен. Локальные данные продолжают храниться на этом устройстве.";
   }
 
   async function refreshAuth() {
@@ -44,11 +47,11 @@
       updatePanel();
 
       if (cloudAuthenticated) {
-        setStatus("Аккаунт подключён. Нажми «Синхронизировать сейчас», чтобы объединить данные устройств.");
+        setStatus("Аккаунт подключён. Проверяем и обновляем облачные данные…");
       } else if (response.status === 401) {
-        setStatus("Войди через Яндекс ID, чтобы включить облачную синхронизацию.");
+        setStatus("Войди через Яндекс ID, чтобы включить облачное хранение.");
       } else {
-        setStatus("Не удалось проверить вход. Проверь подключение и попробуй ещё раз.");
+        setStatus("Не удалось проверить вход. Проверь подключение к интернету.");
       }
 
       return cloudAuthenticated;
@@ -91,8 +94,7 @@
       const key = item && item.id !== undefined && item.id !== null
         ? String(item.id)
         : JSON.stringify(item);
-
-      // For the same record ID, the local copy takes precedence.
+      // Local copy wins when the same record ID exists on both devices.
       merged.set(key, item);
     }
 
@@ -160,13 +162,10 @@
 
   async function logout() {
     if (!cloudAuthenticated) return;
-
-    if (!confirm("Выйти из аккаунта FitTrack? Локальные и облачные данные останутся сохранены.")) {
-      return;
-    }
+    if (!confirm("Выйти из аккаунта FitTrack? Локальные и облачные данные останутся сохранены.")) return;
 
     const button = byId("cloudLogout");
-    button.disabled = true;
+    if (button) button.disabled = true;
 
     try {
       const response = await fetch(API_BASE + "/auth/logout", {
@@ -186,177 +185,135 @@
     } catch (error) {
       setStatus(error.message || "Не удалось выполнить выход.");
     } finally {
-      button.disabled = false;
+      if (button) button.disabled = false;
     }
   }
 
-  async function syncNow() {
-    if (cloudSyncBusy) return;
+  function scheduleSync() {
+    if (!cloudAuthenticated || applyingCloudState) return;
+    if (cloudSyncBusy) {
+      syncAgain = true;
+      return;
+    }
+    clearTimeout(syncTimer);
+    syncTimer = setTimeout(() => syncNow({ automatic: true }), SYNC_DEBOUNCE_MS);
+  }
 
-    if (!cloudAuthenticated && !(await refreshAuth())) {
-      showToast("Сначала войди через Яндекс ID");
+  async function syncNow(options = {}) {
+    if (cloudSyncBusy) {
+      syncAgain = true;
       return;
     }
 
-    // Include the currently edited workout draft in the local snapshot.
-    if (typeof activeSession !== "undefined" && activeSession) {
-      activeSession.updatedAt = new Date().toISOString();
-      state.draft = activeSession;
-      saveState();
-    }
-
-    // Confirm the backup separately before starting network sync.
-if (!localStorage.getItem(CLOUD_BACKUP_KEY)) {
-  const backupConfirmed = confirm(
-    "Ты уже сохранил резервную копию FitTrack JSON в приложении «Файлы» на этом устройстве? " +
-    "Нажми OK, если файл сохранён. Если нет — нажми «Отмена» и сначала экспортируй данные."
-  );
-
-  if (!backupConfirmed) {
-    setStatus("Сначала сохрани резервную копию через «Экспортировать данные».");
-    return;
-  }
-
-  localStorage.setItem(CLOUD_BACKUP_KEY, "done");
-  setStatus("Резервная копия подтверждена. Нажми «Синхронизировать сейчас» ещё раз.");
-  showToast("Резервная копия подтверждена");
-  return;
-}
+    if (!cloudAuthenticated && !(await refreshAuth())) {
+      if (!options.automatic) showToast("Сначала войди через Яндекс ID");
+      return;
     }
 
     cloudSyncBusy = true;
     const button = byId("cloudSync");
-    button.disabled = true;
-    button.textContent = "Синхронизация…";
-    setStatus("Получаем данные из облака…");
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Синхронизация…";
+    }
 
     try {
+      // Include an active workout draft in the snapshot being synchronized.
+      if (typeof activeSession !== "undefined" && activeSession) {
+        activeSession.updatedAt = new Date().toISOString();
+        state.draft = activeSession;
+      }
+
+      setStatus("Получаем данные из облака…");
+
       const getResponse = await fetch(API_BASE + "/state", {
         method: "GET",
         credentials: "include",
         cache: "no-store"
       });
-
       const cloudPayload = await getResponse.json().catch(() => ({}));
 
       if (getResponse.status === 401) {
         cloudAuthenticated = false;
         updatePanel();
-        throw new Error("Сессия истекла. Войди через Яндекс ID ещё раз.");
+        throw new Error("Сессия не найдена. Войди через Яндекс ID ещё раз.");
       }
-
       if (!getResponse.ok) {
-        throw new Error(
-          cloudPayload.error ||
-          "Не удалось прочитать облачные данные (HTTP " + getResponse.status + ")."
-        );
+        throw new Error(cloudPayload.error || "Не удалось прочитать облачные данные (HTTP " + getResponse.status + ").");
       }
 
-      if (
-        cloudPayload.exists &&
-        (
-          !cloudPayload.state ||
-          !Array.isArray(cloudPayload.state.sessions) ||
-          !Array.isArray(cloudPayload.state.bodyWeights) ||
-          !cloudPayload.state.settings ||
-          typeof cloudPayload.state.settings !== "object"
-        )
-      ) {
+      if (cloudPayload.exists && (
+        !cloudPayload.state ||
+        !Array.isArray(cloudPayload.state.sessions) ||
+        !Array.isArray(cloudPayload.state.bodyWeights) ||
+        !cloudPayload.state.settings ||
+        typeof cloudPayload.state.settings !== "object"
+      )) {
         throw new Error("Структура облачных данных не распознана. Локальные данные не изменены.");
       }
 
-      const remoteState = cloudPayload.exists
-        ? normalizeState(cloudPayload.state)
-        : blankState();
-
+      const remoteState = cloudPayload.exists ? normalizeState(cloudPayload.state) : blankState();
       const mergedState = mergeStates(state, remoteState);
 
-      setStatus("Объединяем историю и сохраняем результат в облако…");
-
+      setStatus("Сохраняем объединённые данные в облаке…");
       const putResponse = await fetch(API_BASE + "/state", {
         method: "PUT",
         credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ state: mergedState }),
         cache: "no-store"
       });
-
       const putPayload = await putResponse.json().catch(() => ({}));
 
       if (putResponse.status === 401) {
         cloudAuthenticated = false;
         updatePanel();
-        throw new Error("Сессия истекла. Войди через Яндекс ID ещё раз.");
+        throw new Error("Сессия не найдена. Войди через Яндекс ID ещё раз.");
       }
-
       if (!putResponse.ok) {
-        throw new Error(
-          putPayload.error ||
-          "Не удалось сохранить облачные данные (HTTP " + putResponse.status + ")."
-        );
+        throw new Error(putPayload.error || "Не удалось сохранить данные в облаке (HTTP " + putResponse.status + ").");
       }
 
       const previousState = state;
+      applyingCloudState = true;
       state = mergedState;
+      const savedLocally = saveState();
+      applyingCloudState = false;
 
-      if (!saveState()) {
+      if (!savedLocally) {
         state = previousState;
-        throw new Error(
-          "Облако обновлено, но локально не удалось сохранить объединённую историю. Повтори синхронизацию на этом устройстве."
-        );
+        throw new Error("Облако обновлено, но локально сохранить объединённые данные не удалось.");
       }
 
-      if (
-        typeof activeSession !== "undefined" &&
-        activeSession &&
-        mergedState.draft &&
-        mergedState.draft.id === activeSession.id
-      ) {
+      if (typeof activeSession !== "undefined" && activeSession &&
+          mergedState.draft && mergedState.draft.id === activeSession.id) {
         activeSession = mergedState.draft;
       }
-
-      localStorage.setItem(CLOUD_BACKUP_KEY, "done");
 
       renderHome();
       renderHistory();
       renderProgress();
 
       setStatus(
-        "Синхронизация завершена. Тренировок: " +
-        mergedState.sessions.length +
-        ", измерений веса: " +
-        mergedState.bodyWeights.length +
-        "."
+        "Синхронизация завершена. Тренировок: " + mergedState.sessions.length +
+        ", измерений веса: " + mergedState.bodyWeights.length + "."
       );
-
-      showToast("Данные FitTrack синхронизированы");
+      if (!options.automatic) showToast("Данные FitTrack синхронизированы");
     } catch (error) {
-      setStatus(
-        error.message ||
-        "Не удалось выполнить синхронизацию. Локальные данные сохранены."
-      );
+      applyingCloudState = false;
+      setStatus(error.message || "Не удалось выполнить синхронизацию. Локальные данные сохранены.");
     } finally {
+      applyingCloudState = false;
       cloudSyncBusy = false;
-      button.disabled = false;
-      button.textContent = "Синхронизировать сейчас";
+      if (button) {
+        button.disabled = false;
+        button.textContent = "Синхронизировать сейчас";
+      }
+      if (syncAgain) {
+        syncAgain = false;
+        scheduleSync();
+      }
     }
-  }
-
-  function initCloudSync() {
-    const loginButton = byId("cloudLogin");
-    const syncButton = byId("cloudSync");
-    const logoutButton = byId("cloudLogout");
-
-    if (!loginButton || !syncButton || !logoutButton) return;
-
-    loginButton.addEventListener("click", login);
-    syncButton.addEventListener("click", syncNow);
-    logoutButton.addEventListener("click", logout);
-
-    handleOAuthReturn();
-    refreshAuth();
   }
 
   function handleOAuthReturn() {
@@ -365,7 +322,7 @@ if (!localStorage.getItem(CLOUD_BACKUP_KEY)) {
     const error = params.get("auth_error");
 
     if (success) {
-      showToast("Вход через Яндекс выполнен");
+      showToast("Вход через Яндекс выполнен. Подключаем облако…");
     } else if (error) {
       const messages = {
         access_denied: "Вход через Яндекс отменён.",
@@ -378,19 +335,40 @@ if (!localStorage.getItem(CLOUD_BACKUP_KEY)) {
         session_query_error: "Ошибка запроса к базе данных.",
         session_db_connection_error: "Не удалось подключиться к базе данных."
       };
-
       showToast(messages[error] || "Не удалось выполнить вход через Яндекс.");
     }
 
     if (success || error) {
-      window.history.replaceState(
-        {},
-        document.title,
-        window.location.pathname + window.location.hash
-      );
+      window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
     }
   }
 
-  // app.js is loaded immediately before this file at the end of index.html.
+  function initCloudSync() {
+    const loginButton = byId("cloudLogin");
+    const syncButton = byId("cloudSync");
+    const logoutButton = byId("cloudLogout");
+    if (!loginButton || !syncButton || !logoutButton) return;
+
+    loginButton.addEventListener("click", login);
+    syncButton.addEventListener("click", () => syncNow({ automatic: false }));
+    logoutButton.addEventListener("click", logout);
+
+    // Any successful local save is uploaded after a short pause.
+    window.addEventListener("fittrack:state-saved", scheduleSync);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        refreshAuth().then((authenticated) => {
+          if (authenticated) syncNow({ automatic: true });
+        });
+      }
+    });
+
+    handleOAuthReturn();
+    refreshAuth().then((authenticated) => {
+      if (authenticated) syncNow({ automatic: true });
+    });
+  }
+
+  // app.js must be loaded immediately before this file.
   initCloudSync();
 })();
