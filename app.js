@@ -192,17 +192,19 @@ const workouts = [
         "muscles": "Икроножная и камбаловидная мышцы",
         "startWeight": "Начни с лёгкого веса"
       },
-      {
-        "id": "shoulder-press",
-        "name": "Жим вверх в тренажёре на плечи",
-        "sets": 3,
-        "reps": "10–12",
-        "rest": 90,
-        "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0603-67n3r98.gif",
-        "tech": "Рукояти примерно на уровне ушей. Не прогибай поясницу, выжимай плавно.",
-        "muscles": "Дельтовидные мышцы, трицепс",
-        "startWeight": "Начни с лёгкого веса"
-      },
+      
+{
+  "id": "shoulder-press",
+  "name": "Жим плечами в наклонном тренажёре",
+  "sets": 3,
+  "reps": "10–12",
+  "rest": 90,
+  "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/2318-dNFYIU1.gif",
+  "tech": "Прижми спину к наклонной спинке. Настрой сиденье так, чтобы рукояти находились примерно на уровне плеч. Выжимай вверх плавно, не прогибай поясницу и не поднимай плечи к ушам.",
+  "muscles": "Передний и средний пучки дельтовидных мышц, трицепс",
+  "startWeight": "Начни с лёгкого веса"
+},
+
       {
         "id": "lateral-raise",
         "name": "Махи гантелями в стороны",
@@ -214,6 +216,21 @@ const workouts = [
         "muscles": "Средняя дельта",
         "startWeight": "Начни с лёгкого веса"
       },
+
+
+{
+  "id": "rear-delt-incline-fly",
+  "name": "Обратные разведения гантелей на наклонной скамье",
+  "sets": 3,
+  "reps": "12–15",
+  "rest": 75,
+  "gif": "https://raw.githubusercontent.com/hasaneyldrm/exercises-dataset/main/videos/0326-vYk8lqw.gif",
+  "tech": "Установи скамью под углом около 45 градусов и прижми грудь к спинке. Держи гантели под плечами, слегка согни локти и разводи руки в стороны до уровня корпуса. Не раскачивайся и не пожимай плечами.",
+  "muscles": "Задний пучок дельтовидных мышц, верх спины",
+  "startWeight": "Начни с лёгкого веса"
+},
+
+        
       {
         "id": "abs-leg-raise",
         "name": "Подъём ног лёжа на скамье",
